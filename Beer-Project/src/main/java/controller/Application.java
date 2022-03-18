@@ -1,13 +1,8 @@
-package control;
+package controller;
 
-import repository.BeerRepository;
-import repository.WriteJson;
-import repository.WriteToConsole;
 import service.BeerManager;
 import service.BeerManagerImplementation;
-import service.FileManager;
 
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Application {
@@ -31,27 +26,27 @@ public class Application {
         BeerManager beerManager = new BeerManagerImplementation(PATH);
         application.openConsole(beerManager);
 
-        String task1 = beerManager.groupBeersByBrand(application.outputFormat);
-        String task2 = beerManager.filterBeersByBeerType(TYPE_FILTER, application.outputFormat);
-        String task3 = beerManager.getTheCheapestBrand(application.outputFormat);
-        String task4 = beerManager.getIdsThatLackSpecificIngredient(INGREDIENT_FILTER,application.outputFormat);
-        String task5 = beerManager.sortAllBeersByRemainingIngredientRatio(application.outputFormat);
-        String task6 = beerManager.listBeersBasedOnTheirPriceWithATip(application.outputFormat);
+//        String task1 = beerManager.groupBeersByBrand(application.outputFormat);
+//        String task2 = beerManager.filterBeersByBeerType(TYPE_FILTER, application.outputFormat);
+//        String task3 = beerManager.getTheCheapestBrand(application.outputFormat);
+//        String task4 = beerManager.getIdsThatLackSpecificIngredient(INGREDIENT_FILTER,application.outputFormat);
+//        String task5 = beerManager.sortAllBeersByRemainingIngredientRatio(application.outputFormat);
+//        String task6 = beerManager.listBeersBasedOnTheirPriceWithATip(application.outputFormat);
 
-        System.out.println(task1);
-        System.out.println(task2);
-        System.out.println(task3);
-        System.out.println(task4);
-        System.out.println(task5);
-        System.out.println(task6);
+//        System.out.println(task1);
+//        System.out.println(task2);
+//        System.out.println(task3);
+//        System.out.println(task4);
+//        System.out.println(task5);
+//        System.out.println(task6);
     }
 
     public void openConsole(BeerManager beerManager) {
-        System.out.println("***********************\n   Beer Manager App\n***********************\nAdd your name:");
+        System.out.println("***********************\n   Beer Manager App\n***********************\n\nAdd your name:");
         String line = scanner.nextLine();
         while (validateName(line)) {
         }
-        System.out.println("Select output format:\n1. Console\n2. Write to Json file\n3. Write to database");
+        System.out.println("\nSelect output format:\n1. Console\n2. Write to Json file\n3. Write to database");
 
 
         int step;
@@ -70,9 +65,20 @@ public class Application {
                 throw new IllegalArgumentException("Not ok input format: " + step);
         }
 
-        System.out.println("Select calculation:\n1. Console\n2. Write to Json file\n3. Write to database");
+
 
         do {
+            System.out.println(new StringBuilder()
+                    .append("\nSelect from options:\n")
+                    .append("1. Group beers by brand\n")
+                    .append("2. Filter beers by type\n")
+                    .append("3. Get the cheapest brand\n")
+                    .append("4. Get ids that lack from specific ingredient\n")
+                    .append("5. Sort all beers by remaining ingredient ratio\n")
+                    .append("6. List beers based on their price with a tip\n")
+                    .append("7. Exit\n")
+                    .toString());
+
             step = validateChoseLine(scanner.nextLine());
             switch (step) {
                 case 1:
@@ -82,8 +88,20 @@ public class Application {
                 case 2:
                     String task2 = beerManager.filterBeersByBeerType(TYPE_FILTER, outputFormat);
                     break;
+                case 3:
+                    String task3 = beerManager.getTheCheapestBrand(outputFormat);
+                    break;
+                case 4:
+                    String task4 = beerManager.getIdsThatLackSpecificIngredient(INGREDIENT_FILTER,outputFormat);
+                    break;
+                case 5:
+                    String task5 = beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat);
+                    break;
+                case 6:
+                    String task6 = beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat);
+//                default:
+//                    throw new IllegalArgumentException("Not ok input format: " + step);
             }
-
         } while (step != 7);
     }
 

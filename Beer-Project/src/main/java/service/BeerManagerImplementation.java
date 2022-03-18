@@ -53,9 +53,10 @@ public class BeerManagerImplementation implements BeerManager {
 //        String nameOfTheTask = "groupBeersByBrand";
 //        writeSolutionToJsonFile(stringFromJsonArrayResult, nameOfTheTask);
 //        System.out.println(stringFromJsonArrayResult);
-        String nameOfTheTask = "groupBeersByBrand";
+//        String nameOfTheTask = "groupBeersByBrand";
+        String nameOfTheTask = "group_beers_by_brand";
 
-        return convertToJson(brandAndBeers, 1, outputFormat);
+        return convertToJson(brandAndBeers, 1, outputFormat, nameOfTheTask);
     }
 
     @Override
@@ -64,8 +65,9 @@ public class BeerManagerImplementation implements BeerManager {
                 .filter(k -> k.getType().equals(type))
                 .map(Beer::getId)
                 .collect(Collectors.toList());
-        String nameOfTheTask = "filterBeersByBeerType";
-        return convertToJson(beerIds, 2, outputFormat);
+//        String nameOfTheTask = "filterBeersByBeerType";
+        String nameOfTheTask = "filter_beers_by_type";
+        return convertToJson(beerIds, 2, outputFormat, nameOfTheTask);
     }
 
     @Override
@@ -82,8 +84,9 @@ public class BeerManagerImplementation implements BeerManager {
         BrandsWithPrices bwp = tempBrandsAndPrices.values().stream()
                 .min(Comparator.comparing(BrandsWithPrices::getAveragePrice))
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
-        String nameOfTheTask = "getTheCheapestBrand";
-        return convertToJson(bwp.getBrandName(), 3, outputFormat);
+//        String nameOfTheTask = "getTheCheapestBrand";
+        String nameOfTheTask = "the_cheapest_brand";
+        return convertToJson(bwp.getBrandName(), 3, outputFormat, nameOfTheTask);
     }
 
     @Override
@@ -95,8 +98,9 @@ public class BeerManagerImplementation implements BeerManager {
             }
         }
 
-        String nameOfTheTask = "getIdsThatLackSpecificIngredient";
-        return convertToJson(idsWithoutSpecificIngredient, 4, outputFormat);
+//        String nameOfTheTask = "getIdsThatLackSpecificIngredient";
+        String nameOfTheTask = "get_ids_that_lack_from_specific_ingredient";
+        return convertToJson(idsWithoutSpecificIngredient, 4, outputFormat, nameOfTheTask);
     }
 
     @Override
@@ -105,8 +109,9 @@ public class BeerManagerImplementation implements BeerManager {
                 .sorted(Comparator.comparing(Beer::getWaterIngredient).thenComparing(Beer::getId))
                 .map(Beer::getId)
                 .toList();
-        String nameOfTheTask = "sortAllBeersByRemainingIngredientRatio";
-        return convertToJson(beerIds, 5, outputFormat);
+//        String nameOfTheTask = "sortAllBeersByRemainingIngredientRatio";
+        String nameOfTheTask = "sort_all_beers_by_remaining_ingredient_ratio";
+        return convertToJson(beerIds, 5, outputFormat, nameOfTheTask);
     }
 
     @Override
@@ -118,11 +123,12 @@ public class BeerManagerImplementation implements BeerManager {
             tempBeers.add(bc.getId());
         }
 
-        String nameOfTheTask = "listBeersBasedOnTheirPriceWithATip";
-        return convertToJson(beersAndRoundedPrices, 6, outputFormat);
+//        String nameOfTheTask = "listBeersBasedOnTheirPriceWithATip";
+        String nameOfTheTask = "list_beers_based_on_their_price_with_a_tip";
+        return convertToJson(beersAndRoundedPrices, 6, outputFormat, nameOfTheTask);
     }
 
-    private String convertToJson(Object o, int taskNumber, int outputFormat) {
+    private String convertToJson(Object o, int taskNumber, int outputFormat, String nameOfTheTask) {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
         String result;
@@ -136,10 +142,13 @@ public class BeerManagerImplementation implements BeerManager {
             } else if (outputFormat == 2) {
 //                WriteJson writeJson = new WriteJson();
 //                writeJson.writeToJsonFile(task);
-                objectMapper.writeValue(new File("task" + taskNumber + ".json"), o);
+                objectMapper.writeValue(new File(taskNumber + ". " + nameOfTheTask + ".json"), o);
             } else if (outputFormat == 3) {
-//                BeerRepository beerRepository = new BeerRepository();
+                BeerRepository beerRepository = new BeerRepository();
+                beerRepository.init();
+                beerRepository.separate(o,taskNumber, nameOfTheTask);
 //                beerRepository.writeToDatabase(task);
+
             }
 //            objectMapper.writeValue(new File("task" + taskNumber + ".json"), o);
         } catch (IOException ioe) {

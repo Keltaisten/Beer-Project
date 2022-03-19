@@ -32,7 +32,6 @@ public class Application {
 //        String task4 = beerManager.getIdsThatLackSpecificIngredient(INGREDIENT_FILTER,application.outputFormat);
 //        String task5 = beerManager.sortAllBeersByRemainingIngredientRatio(application.outputFormat);
 //        String task6 = beerManager.listBeersBasedOnTheirPriceWithATip(application.outputFormat);
-
 //        System.out.println(task1);
 //        System.out.println(task2);
 //        System.out.println(task3);
@@ -46,9 +45,57 @@ public class Application {
         String line = scanner.nextLine();
         while (validateName(line)) {
         }
+        selectOutputFormat();
+        selectService(beerManager);
+    }
+
+    private void selectService(BeerManager beerManager) {
+        int step;
+        do {
+            System.out.println(new StringBuilder()
+                    .append("\nSelect from options:\n")
+                    .append("1. Group beers by brand\n")
+                    .append("2. Filter beers by type\n")
+                    .append("3. Get the cheapest brand\n")
+                    .append("4. Get ids that lack from specific ingredient\n")
+                    .append("5. Sort all beers by remaining ingredient ratio\n")
+                    .append("6. List beers based on their price with a tip\n")
+                    .append("7. Back\n")
+                    .append("8. Exit\n")
+                    .toString());
+            step = validateChoseLine(scanner.nextLine());
+            switch (step) {
+                case 1:
+                    beerManager.groupBeersByBrand(outputFormat);
+//                    selectOutPut(task1, outputFormat);
+                    break;
+                case 2:
+                    String type = askForType();
+                    beerManager.filterBeersByBeerType(type, outputFormat);
+                    break;
+                case 3:
+                    beerManager.getTheCheapestBrand(outputFormat);
+                    break;
+                case 4:
+                    String ingredient = askForIngredient();
+                    beerManager.getIdsThatLackSpecificIngredient(ingredient, outputFormat);
+                    break;
+                case 5:
+                    beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat);
+                    break;
+                case 6:
+                    beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat);
+                    break;
+                case 7:
+                    selectOutputFormat();
+//                default:
+//                    throw new IllegalArgumentException("Not ok input format: " + step);
+            }
+        } while (step != 8);
+    }
+
+    private void selectOutputFormat() {
         System.out.println("\nSelect output format:\n1. Console\n2. Write to Json file\n3. Write to database");
-
-
         int step;
         step = validateChoseLine(scanner.nextLine());
         switch (step) {
@@ -64,45 +111,15 @@ public class Application {
             default:
                 throw new IllegalArgumentException("Not ok input format: " + step);
         }
+    }
 
-
-        do {
-            System.out.println(new StringBuilder()
-                    .append("\nSelect from options:\n")
-                    .append("1. Group beers by brand\n")
-                    .append("2. Filter beers by type\n")
-                    .append("3. Get the cheapest brand\n")
-                    .append("4. Get ids that lack from specific ingredient\n")
-                    .append("5. Sort all beers by remaining ingredient ratio\n")
-                    .append("6. List beers based on their price with a tip\n")
-                    .append("7. Exit\n")
-                    .toString());
-
-            step = validateChoseLine(scanner.nextLine());
-            switch (step) {
-                case 1:
-                    beerManager.groupBeersByBrand(outputFormat);
-//                    selectOutPut(task1, outputFormat);
-                    break;
-                case 2:
-                    String type = askForType();
-                    beerManager.filterBeersByBeerType(type, outputFormat);
-                    break;
-                case 3:
-                    beerManager.getTheCheapestBrand(outputFormat);
-                    break;
-                case 4:
-                    beerManager.getIdsThatLackSpecificIngredient(INGREDIENT_FILTER, outputFormat);
-                    break;
-                case 5:
-                    beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat);
-                    break;
-                case 6:
-                    beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat);
-//                default:
-//                    throw new IllegalArgumentException("Not ok input format: " + step);
-            }
-        } while (step != 7);
+    private String askForIngredient() {
+        System.out.println(new StringBuilder()
+                .append("\nSelect one ingredient:\n")
+                .append("barley\n").append("corn\n")
+                .append("salt\n").append("sugar\n")
+                .append("wheat\n").toString());
+        return scanner.nextLine().toLowerCase();
     }
 
     private String askForType() {

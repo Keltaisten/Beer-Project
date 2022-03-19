@@ -25,6 +25,7 @@ PRIMARY KEY (id)
 
 CREATE TABLE if NOT EXISTS list_beers_based_on_their_price_with_a_tip (
 id BIGINT NOT NULL AUTO_INCREMENT,
+rounded_price INT,
 ids_of_beers VARCHAR(250),
 PRIMARY KEY (id)
 );

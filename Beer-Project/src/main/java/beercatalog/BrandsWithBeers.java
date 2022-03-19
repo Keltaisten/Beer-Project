@@ -18,6 +18,14 @@ public class BrandsWithBeers {
         beers.add(beer);
     }
 
+    @Override
+    public String toString() {
+        return "BrandsWithBeers{" +
+                "brand='" + brand + '\'' +
+                ", beers=" + beers +
+                '}';
+    }
+
     public String getBrand() {
         return brand;
     }

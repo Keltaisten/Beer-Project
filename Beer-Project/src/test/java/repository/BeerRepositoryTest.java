@@ -22,9 +22,6 @@ class BeerRepositoryTest {
         Properties prop = new Properties();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(BeerRepository.class.getResourceAsStream("/beerstore.properties")))) {
             prop.load(br);
-//            System.out.println(prop.getProperty("url"));
-//            System.out.println(prop.getProperty("user"));
-//            System.out.println(prop.getProperty("password"));
             MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));
             dataSource.setUser(prop.getProperty("user"));
@@ -40,10 +37,10 @@ class BeerRepositoryTest {
 
     }
 
-    @Test
-    void separateTest() {
-
-    }
+//    @Test
+//    void separateTest() {
+//
+//    }
 
     @Test
     void getTheCheapestBrandToDbTest(){
@@ -58,16 +55,16 @@ class BeerRepositoryTest {
         assertEquals("csc02",beerId);
     }
 
-    @Test
-    void listsToDbTest() {
-    }
-
-    @Test
-    void filterBeersByBeerTypeToDbTest() {
-
-    }
-
-    @Test
-    void groupBeersByBrandToDb() {
-    }
+//    @Test
+//    void listsToDbTest() {
+//    }
+//
+//    @Test
+//    void filterBeersByBeerTypeToDbTest() {
+//
+//    }
+//
+//    @Test
+//    void groupBeersByBrandToDb() {
+//    }
 }

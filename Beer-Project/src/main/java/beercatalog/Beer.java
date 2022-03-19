@@ -21,8 +21,35 @@ public class Beer {
         return false;
     }
 
+    public Beer() {
+    }
 
+    public Beer(String id, String name, String brand, String type, int price, double alcohol, List<Ingredient> ingredients) {
+        this.id = id;
+        this.name = name;
+        this.brand = brand;
+        this.type = type;
+        this.price = price;
+        this.alcohol = alcohol;
+        this.ingredients = ingredients;
+    }
 
+    public void addIngredient(Ingredient ingredient){
+        ingredients.add(ingredient);
+    }
+
+    @Override
+    public String toString() {
+        return "Beer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", brand='" + brand + '\'' +
+                ", type='" + type + '\'' +
+                ", price=" + price +
+                ", alcohol=" + alcohol +
+                ", ingredients=" + ingredients +
+                '}';
+    }
 
     public String getId() {
         return id;

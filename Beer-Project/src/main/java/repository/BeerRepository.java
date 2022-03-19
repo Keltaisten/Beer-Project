@@ -4,9 +4,13 @@ import beercatalog.BrandsWithBeers;
 import org.mariadb.jdbc.MariaDbDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 public class BeerRepository {
     private MariaDbDataSource dataSource;
@@ -25,16 +29,33 @@ public class BeerRepository {
 
     public MariaDbDataSource init() {
 //        BeerRepository beerRepository;
-        try {
+//        try {
+//            MariaDbDataSource dataSource = new MariaDbDataSource();
+//            dataSource.setUrl("jdbc:mariadb://localhost:3306/people?useUnicode=true");
+//            dataSource.setUser("peopleuser");
+//            dataSource.setPassword("peoplepassword");
+////            beerRepository = new BeerRepository(dataSource);
+
+
+            Properties prop = new Properties();
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(BeerRepository.class.getResourceAsStream("/beerstore.properties")))){
+            prop.load(br);
+//            System.out.println(prop.getProperty("url"));
+//            System.out.println(prop.getProperty("user"));
+//            System.out.println(prop.getProperty("password"));
             MariaDbDataSource dataSource = new MariaDbDataSource();
-            dataSource.setUrl("jdbc:mariadb://localhost:3306/people?useUnicode=true");
-            dataSource.setUser("peopleuser");
-            dataSource.setPassword("peoplepassword");
-//            beerRepository = new BeerRepository(dataSource);
+            dataSource.setUrl(prop.getProperty("url"));
+            dataSource.setUser(prop.getProperty("user"));
+            dataSource.setPassword(prop.getProperty("password"));
             return dataSource;
-        } catch (SQLException sqle) {
-            throw new IllegalStateException("Can not reach database.", sqle);
+        }catch (IOException | SQLException ex){
+            throw new IllegalStateException("Cannot reach file", ex);
         }
+
+
+//        } catch (SQLException sqle) {
+//            throw new IllegalStateException("Can not reach database.", sqle);
+//        }
     }
 
     public void separate(Object o, int task, String nameOfTheTask) {

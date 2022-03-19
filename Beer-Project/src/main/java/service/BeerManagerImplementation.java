@@ -25,7 +25,7 @@ public class BeerManagerImplementation implements BeerManager {
 
 
     @Override
-    public String groupBeersByBrand(int outputFormat) {
+    public void groupBeersByBrand(int outputFormat) {
 //        List<String> beersByGroups;
 //        Map<String, List<String>> brandAndBeers = new HashMap<>();
 //
@@ -56,22 +56,22 @@ public class BeerManagerImplementation implements BeerManager {
 //        String nameOfTheTask = "groupBeersByBrand";
         String nameOfTheTask = "group_beers_by_brand";
 
-        return convertToJson(brandAndBeers, 1, outputFormat, nameOfTheTask);
+        convertToJson(brandAndBeers, 1, outputFormat, nameOfTheTask);
     }
 
     @Override
-    public String filterBeersByBeerType(String type, int outputFormat) {
+    public void filterBeersByBeerType(String type, int outputFormat) {
         List<String> beerIds = beers.stream()
-                .filter(k -> k.getType().equals(type))
+                .filter(k -> k.getType().toLowerCase().equals(type))
                 .map(Beer::getId)
                 .collect(Collectors.toList());
 //        String nameOfTheTask = "filterBeersByBeerType";
         String nameOfTheTask = "filter_beers_by_type";
-        return convertToJson(beerIds, 2, outputFormat, nameOfTheTask);
+        convertToJson(beerIds, 2, outputFormat, nameOfTheTask);
     }
 
     @Override
-    public String getTheCheapestBrand(int outputFormat) {
+    public void getTheCheapestBrand(int outputFormat) {
         Map<String, BrandsWithPrices> tempBrandsAndPrices = new HashMap<>();
 
         for (Beer bc : beers) {
@@ -86,11 +86,11 @@ public class BeerManagerImplementation implements BeerManager {
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
 //        String nameOfTheTask = "getTheCheapestBrand";
         String nameOfTheTask = "the_cheapest_brand";
-        return convertToJson(bwp.getBrandName(), 3, outputFormat, nameOfTheTask);
+        convertToJson(bwp.getBrandName(), 3, outputFormat, nameOfTheTask);
     }
 
     @Override
-    public String getIdsThatLackSpecificIngredient(String ingredient, int outputFormat) {
+    public void getIdsThatLackSpecificIngredient(String ingredient, int outputFormat) {
         List<String> idsWithoutSpecificIngredient = new ArrayList<>();
         for (Beer actual : beers) {
             if (actual.checkIfIngredientNotInclude(ingredient)) {
@@ -100,22 +100,22 @@ public class BeerManagerImplementation implements BeerManager {
 
 //        String nameOfTheTask = "getIdsThatLackSpecificIngredient";
         String nameOfTheTask = "get_ids_that_lack_from_specific_ingredient";
-        return convertToJson(idsWithoutSpecificIngredient, 4, outputFormat, nameOfTheTask);
+        convertToJson(idsWithoutSpecificIngredient, 4, outputFormat, nameOfTheTask);
     }
 
     @Override
-    public String sortAllBeersByRemainingIngredientRatio(int outputFormat) {
+    public void sortAllBeersByRemainingIngredientRatio(int outputFormat) {
         List<String> beerIds = beers.stream()
                 .sorted(Comparator.comparing(Beer::getWaterIngredient).thenComparing(Beer::getId))
                 .map(Beer::getId)
                 .toList();
 //        String nameOfTheTask = "sortAllBeersByRemainingIngredientRatio";
         String nameOfTheTask = "sort_all_beers_by_remaining_ingredient_ratio";
-        return convertToJson(beerIds, 5, outputFormat, nameOfTheTask);
+        convertToJson(beerIds, 5, outputFormat, nameOfTheTask);
     }
 
     @Override
-    public String listBeersBasedOnTheirPriceWithATip(int outputFormat) {
+    public void listBeersBasedOnTheirPriceWithATip(int outputFormat) {
         Map<Integer, List<String>> beersAndRoundedPrices = new TreeMap<>();
         for (Beer bc : beers) {
             int roundedPrice = ((bc.getPrice() + 99) / 100) * 100;
@@ -125,10 +125,10 @@ public class BeerManagerImplementation implements BeerManager {
 
 //        String nameOfTheTask = "listBeersBasedOnTheirPriceWithATip";
         String nameOfTheTask = "list_beers_based_on_their_price_with_a_tip";
-        return convertToJson(beersAndRoundedPrices, 6, outputFormat, nameOfTheTask);
+        convertToJson(beersAndRoundedPrices, 6, outputFormat, nameOfTheTask);
     }
 
-    private String convertToJson(Object o, int taskNumber, int outputFormat, String nameOfTheTask) {
+    private void convertToJson(Object o, int taskNumber, int outputFormat, String nameOfTheTask) {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
         String result;
@@ -146,7 +146,7 @@ public class BeerManagerImplementation implements BeerManager {
             } else if (outputFormat == 3) {
                 BeerRepository beerRepository = new BeerRepository();
                 beerRepository.init();
-                beerRepository.separate(o,taskNumber, nameOfTheTask);
+                beerRepository.separate(o, taskNumber, nameOfTheTask);
 //                beerRepository.writeToDatabase(task);
 
             }
@@ -154,7 +154,7 @@ public class BeerManagerImplementation implements BeerManager {
         } catch (IOException ioe) {
             throw new IllegalArgumentException("Cannot write file", ioe);
         }
-        return result;
+//        return result;
     }
 
 //    private void selectOutPut(Object o, ObjectMapper objectMapper, int taskNumber, int outputFormat) {

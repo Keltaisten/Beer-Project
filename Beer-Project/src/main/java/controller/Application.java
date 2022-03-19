@@ -66,7 +66,6 @@ public class Application {
         }
 
 
-
         do {
             System.out.println(new StringBuilder()
                     .append("\nSelect from options:\n")
@@ -82,27 +81,37 @@ public class Application {
             step = validateChoseLine(scanner.nextLine());
             switch (step) {
                 case 1:
-                    String task1 = beerManager.groupBeersByBrand(outputFormat);
+                    beerManager.groupBeersByBrand(outputFormat);
 //                    selectOutPut(task1, outputFormat);
                     break;
                 case 2:
-                    String task2 = beerManager.filterBeersByBeerType(TYPE_FILTER, outputFormat);
+                    String type = askForType();
+                    beerManager.filterBeersByBeerType(type, outputFormat);
                     break;
                 case 3:
-                    String task3 = beerManager.getTheCheapestBrand(outputFormat);
+                    beerManager.getTheCheapestBrand(outputFormat);
                     break;
                 case 4:
-                    String task4 = beerManager.getIdsThatLackSpecificIngredient(INGREDIENT_FILTER,outputFormat);
+                    beerManager.getIdsThatLackSpecificIngredient(INGREDIENT_FILTER, outputFormat);
                     break;
                 case 5:
-                    String task5 = beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat);
+                    beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat);
                     break;
                 case 6:
-                    String task6 = beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat);
+                    beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat);
 //                default:
 //                    throw new IllegalArgumentException("Not ok input format: " + step);
             }
         } while (step != 7);
+    }
+
+    private String askForType() {
+        System.out.println(new StringBuilder()
+                .append("\nSelect one type:\n")
+                .append("Brown\n").append("Corn\n")
+                .append("Pale Ale\n").append("Wheat\n")
+                .append("White\n").toString());
+        return scanner.nextLine().toLowerCase();
     }
 
 //    private void selectOutPut(String task, int outputFormat) {

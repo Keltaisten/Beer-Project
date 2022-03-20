@@ -14,33 +14,15 @@ public class BeerRepository {
     private MariaDbDataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
-//    public BeerRepository(MariaDbDataSource dataSource) {
-//        this.dataSource = dataSource;
-//        jdbcTemplate = new JdbcTemplate(dataSource);
-//    }
-
-
     public BeerRepository() {
         this.dataSource = init();
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public MariaDbDataSource init() {
-//        BeerRepository beerRepository;
-//        try {
-//            MariaDbDataSource dataSource = new MariaDbDataSource();
-//            dataSource.setUrl("jdbc:mariadb://localhost:3306/people?useUnicode=true");
-//            dataSource.setUser("peopleuser");
-//            dataSource.setPassword("peoplepassword");
-////            beerRepository = new BeerRepository(dataSource);
-
-
         Properties prop = new Properties();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(BeerRepository.class.getResourceAsStream("/beerstore.properties")))) {
             prop.load(br);
-//            System.out.println(prop.getProperty("url"));
-//            System.out.println(prop.getProperty("user"));
-//            System.out.println(prop.getProperty("password"));
             MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));
             dataSource.setUser(prop.getProperty("user"));
@@ -49,11 +31,6 @@ public class BeerRepository {
         } catch (IOException | SQLException ex) {
             throw new IllegalStateException("Cannot reach file", ex);
         }
-
-
-//        } catch (SQLException sqle) {
-//            throw new IllegalStateException("Can not reach database.", sqle);
-//        }
     }
 
     public void separate(Object o, int task, String nameOfTheTask) {
@@ -115,7 +92,6 @@ public class BeerRepository {
             try (ResultSet rs = stmt.getGeneratedKeys();) {
                 if (rs.next()) {
                     id = rs.getLong(1);
-//                    System.out.println(rs.getLong(1));
                 }
             }
         } catch (SQLException sqle) {
@@ -146,7 +122,6 @@ public class BeerRepository {
             try (ResultSet rs = stmt.getGeneratedKeys();) {
                 if (rs.next()) {
                     return rs.getLong(1);
-//                    System.out.println(rs.getLong(1));
                 }
             }
         } catch (SQLException sqle) {

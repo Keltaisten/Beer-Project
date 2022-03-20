@@ -149,23 +149,16 @@ public class BeerManagerImplementation implements BeerManager {
 
         String result;
         try {
-//            selectOutPut(o, objectMapper, taskNumber,outputFormat);
             result = objectMapper.writeValueAsString(o);
             if (outputFormat == 1) {
-//                WriteToConsole writeToConsole = new WriteToConsole();
-//                writeToConsole.writeToConsole(task);
                 System.out.println(result);
             } else if (outputFormat == 2) {
-//                WriteJson writeJson = new WriteJson();
-//                writeJson.writeToJsonFile(task);
                 objectMapper.writeValue(new File(taskNumber + ". " + nameOfTheTask + ".json"), o);
             } else if (outputFormat == 3) {
                 BeerRepository beerRepository = new BeerRepository();
                 beerRepository.init();
                 beerRepository.separate(o, taskNumber, nameOfTheTask);
-//                beerRepository.writeToDatabase(task);
             }
-//            objectMapper.writeValue(new File("task" + taskNumber + ".json"), o);
             return result;
         } catch (IOException ioe) {
             throw new IllegalStateException("Cannot write file", ioe);

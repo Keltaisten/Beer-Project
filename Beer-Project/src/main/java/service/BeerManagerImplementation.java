@@ -6,8 +6,6 @@ import beercatalog.BrandsWithPrices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import repository.BeerRepository;
-import repository.WriteJson;
-import repository.WriteToConsole;
 
 import java.io.File;
 import java.io.IOException;

@@ -8,9 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class BeerRepository {
     private MariaDbDataSource dataSource;
@@ -70,7 +68,7 @@ public class BeerRepository {
         }
     }
 
-    private void listBeersBasedOnTheirPriceWithATipToDb(Object o, String nameOfTheTask) {
+    public void listBeersBasedOnTheirPriceWithATipToDb(Object o, String nameOfTheTask) {
         Map<Integer, List<String>> beersAndRoundedPrices = (Map<Integer, List<String>>) o;
         for (Map.Entry entry : beersAndRoundedPrices.entrySet()) {
             for (String s : (List<String>) entry.getValue()) {
@@ -106,7 +104,7 @@ public class BeerRepository {
         }
     }
 
-    public String insertThanFindById(String beer) {
+    public String insertThanFindByIdAndGetBeerName(String beer) {
         long id = -1;
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
@@ -156,4 +154,25 @@ public class BeerRepository {
         }
         throw new IllegalArgumentException("Can not generate id");
     }
+
+    public Optional<List<String>> selectBeerIdData(String nameOfTable, String nameOfColumn){
+        String column = "distinct " + nameOfColumn;
+        String sqlTemp = "select distinct * from " + nameOfTable + ";";
+        return Optional.of(jdbcTemplate.query(sqlTemp,
+                (rs, rowNum) -> rs.getString(nameOfColumn)));
+    }
+
+    public Optional<List<Integer>> selectBeerTipData(String nameOfTable, String nameOfColumn){
+        String column = "distinct " + nameOfColumn;
+        String sqlTemp = "select distinct * from " + nameOfTable + ";";
+        return Optional.of(jdbcTemplate.query(sqlTemp,
+                (rs, rowNum) -> rs.getInt(nameOfColumn)));
+    }
+
+//    public Optional<List<String>> selectBeerIds(String nameOfTable){
+//        String sqlTemp = "select * from " + nameOfTable + ";";
+//        return Optional.of(jdbcTemplate.query(sqlTemp,
+//                (rs, rowNum) -> rs.getString("ids_of_beers")));
+//    }
+
 }

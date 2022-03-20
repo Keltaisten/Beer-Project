@@ -22,14 +22,14 @@ class BeerRepositoryTest {
     @BeforeEach
     void initTest() {
         Properties prop = new Properties();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(BeerRepository.class.getResourceAsStream("/beerstore.properties")))) {
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(BeerRepository.class.getResourceAsStream("/beerstore.properties")))) {
             prop.load(br);
             MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));
             dataSource.setUser(prop.getProperty("user"));
             dataSource.setPassword(prop.getProperty("password"));
             beerRepository.init();
-//            return dataSource;
             Flyway fw = Flyway.configure().dataSource(dataSource).load();
             fw.clean();
             fw.migrate();
@@ -37,11 +37,6 @@ class BeerRepositoryTest {
             throw new IllegalStateException("Cannot reach file", ex);
         }
     }
-
-//    @Test
-//    void separateTest() {
-//
-//    }
 
     @Test
     void getTheCheapestBrandToDbTest() {
@@ -76,7 +71,8 @@ class BeerRepositoryTest {
         brandsWithBeers.add(new BrandsWithBeers("Level Up Brewery", Arrays.asList("lupa-1")));
         brandsWithBeers.add(new BrandsWithBeers("Share", Arrays.asList("sw-1", "spa-1")));
         beerRepository.groupBeersByBrandToDb(brandsWithBeers, "group_beers_by_brand");
-        List<String> actual = beerRepository.selectBeerIdData("group_beers_by_brand", "brand_of_beers").get().stream().distinct().collect(Collectors.toList());
+        List<String> actual = beerRepository.selectBeerIdData("group_beers_by_brand",
+                "brand_of_beers").get().stream().distinct().collect(Collectors.toList());
         assertEquals(Arrays.asList("Coding Challenge Brewery", "Level Up Brewery", "Share"), actual);
 //        assertEquals(Arrays.asList("Coding Challenge Brewery", "Level Up Brewery", "Share"),
 //                beerRepository.selectBeerData("group_beers_by_brand", "brand_of_beers").get());

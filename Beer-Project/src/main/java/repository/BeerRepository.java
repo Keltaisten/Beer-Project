@@ -63,7 +63,6 @@ public class BeerRepository {
 //        jdbcTemplate.update("insert into the_cheapest_brand (name_of_brand) values (?);", o);
 
     public void listsToDb(Object o, String nameOfTask) {
-
         List<String> beerIds = (List<String>) o;
         for (String s : beerIds) {
             String sqlWord = "insert into " + nameOfTask + " (ids_of_beers) values (?);";

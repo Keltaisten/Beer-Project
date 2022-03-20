@@ -30,16 +30,8 @@ public class BrandsWithBeers {
         return brand;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
     public List<String> getBeers() {
         return beers;
-    }
-
-    public void setBeers(List<String> beers) {
-        this.beers = beers;
     }
 
     @Override

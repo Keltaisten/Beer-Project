@@ -16,7 +16,6 @@ ids_of_beers VARCHAR(250),
 PRIMARY KEY (id)
 );
 
-
 CREATE TABLE if NOT EXISTS sort_all_beers_by_remaining_ingredient_ratio (
 id BIGINT NOT NULL AUTO_INCREMENT,
 ids_of_beers VARCHAR(250),

@@ -118,6 +118,7 @@ public class BeerManagerImplementation implements BeerManager {
 
     @Override
     public List<String> sortAllBeersByRemainingIngredientRatio(int outputFormat) {
+        beers.forEach(Beer::setWaterIngredient);
         List<String> beerIds = beers.stream()
                 .sorted(Comparator.comparing(Beer::getWaterIngredient).thenComparing(Beer::getId))
                 .map(Beer::getId)

@@ -32,6 +32,7 @@ public class Beer {
         this.price = price;
         this.alcohol = alcohol;
         this.ingredients = ingredients;
+        setWaterIngredient();
     }
 
     public void addIngredient(Ingredient ingredient){
@@ -49,6 +50,12 @@ public class Beer {
                 ", alcohol=" + alcohol +
                 ", ingredients=" + ingredients +
                 '}';
+    }
+
+    public void setWaterIngredient() {
+        for (Ingredient ingredient : ingredients) {
+            waterIngredient += ingredient.getRatio();
+        }
     }
 
     public String getId() {

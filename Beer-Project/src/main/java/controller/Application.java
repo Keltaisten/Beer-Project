@@ -12,6 +12,9 @@ public class Application {
     public static final String INGREDIENT_FILTER = "corn";
     Scanner scanner = new Scanner(System.in);
     private int outputFormat;
+    //    private String name;
+    private static final String OUTPUT_FORMAT_NUMBERS = "123";
+    private static final String SERVICE_FORMAT_NUMBERS = "12345678";
 
 //    private String task1;
 //    private String task2;
@@ -22,10 +25,8 @@ public class Application {
 
     public static void main(String[] args) {
         Application application = new Application();
-
         BeerManager beerManager = new BeerManagerImplementation(PATH);
         application.openConsole(beerManager);
-
 //        String task1 = beerManager.groupBeersByBrand(application.outputFormat);
 //        String task2 = beerManager.filterBeersByBeerType(TYPE_FILTER, application.outputFormat);
 //        String task3 = beerManager.getTheCheapestBrand(application.outputFormat);
@@ -42,15 +43,17 @@ public class Application {
 
     public void openConsole(BeerManager beerManager) {
         System.out.println("***********************\n   Beer Manager App\n***********************\n\nAdd your name:");
-        String line = scanner.nextLine();
-        while (validateName(line)) {
+        String line;
+        while (validateName(line = scanner.nextLine())) {
         }
+//        System.out.println(line + " valami");
         selectOutputFormat();
         selectService(beerManager);
     }
 
     private void selectService(BeerManager beerManager) {
         int step;
+        String line;
         do {
             System.out.println(new StringBuilder()
                     .append("\nSelect from options:\n")
@@ -63,7 +66,10 @@ public class Application {
                     .append("7. Back\n")
                     .append("8. Exit\n")
                     .toString());
-            step = validateChoseLine(scanner.nextLine());
+//            step = validateChoseLine(scanner.nextLine());
+            while (validateNumbers(line = scanner.nextLine(), SERVICE_FORMAT_NUMBERS)) {
+            }
+            step = Integer.parseInt(line);
             switch (step) {
                 case 1:
                     beerManager.groupBeersByBrand(outputFormat);
@@ -96,8 +102,12 @@ public class Application {
 
     private void selectOutputFormat() {
         System.out.println("\nSelect output format:\n1. Console\n2. Write to Json file\n3. Write to database");
+        String line;
         int step;
-        step = validateChoseLine(scanner.nextLine());
+        while (validateNumbers(line = scanner.nextLine(), OUTPUT_FORMAT_NUMBERS)) {
+        }
+        step = Integer.parseInt(line);
+//        step = validateChoseLine(scanner.nextLine());
         switch (step) {
             case 1:
                 outputFormat = 1;
@@ -119,7 +129,15 @@ public class Application {
                 .append("barley\n").append("corn\n")
                 .append("salt\n").append("sugar\n")
                 .append("wheat\n").toString());
-        return scanner.nextLine().toLowerCase();
+        return askNewInputIfPrevWasWrong();
+    }
+
+    private String askNewInputIfPrevWasWrong() {
+        String line;
+        do {
+            line = scanner.nextLine().toLowerCase();
+        } while (validateName(line));
+        return line;
     }
 
     private String askForType() {
@@ -145,6 +163,9 @@ public class Application {
 //    }
 
     private int validateChoseLine(String nextLine) {
+        if (nextLine == null || nextLine.trim().equals("")) {
+            return 1;
+        }
         for (Character c : nextLine.trim().toCharArray()) {
             if (!Character.isDigit(c)) {
                 System.out.println("Given parameter is not number");
@@ -155,10 +176,30 @@ public class Application {
 
     private boolean validateName(String nextLine) {
         if (nextLine == null || nextLine.trim().equals("")) {
-            System.out.println("Name not correct: " + nextLine);
+            System.out.println("Name not correct.\nPlease add your name!");
             return true;
         } else {
             return false;
         }
+    }
+
+    private boolean validateNumbers(String nextLine, String numbers) {
+        String line;
+        if (nextLine == null || nextLine.trim().equals("")) {
+            System.out.println("Given parameter is not ok");
+            return true;
+        }
+        line = nextLine.trim();
+        if (line.length() != 1) {
+            System.out.println("Given parameter is not ok");
+            return true;
+        } else if (!Character.isDigit(line.charAt(0))) {
+            System.out.println("Given parameter is not a number");
+            return true;
+        } else if (numbers.contains(line)) {
+            return false;
+        }
+        System.out.println("Given parameter is not ok");
+        return true;
     }
 }

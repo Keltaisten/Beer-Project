@@ -1,12 +1,12 @@
 package service;
 
 import beercatalog.Beer;
+import beercatalog.BeerIdWithIngredientRatio;
 import beercatalog.BrandsWithBeers;
 import beercatalog.BrandsWithPrices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import repository.BeerRepo;
-import repository.BeerRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,7 @@ public class BeerServiceImplementation implements BeerService {
     private List<Beer> beers = new ArrayList<>();
     private FileService fileManager;
     private List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
+    private BeerRepo beerRepo = new BeerRepo();
 
     public BeerServiceImplementation() {
     }
@@ -24,12 +25,10 @@ public class BeerServiceImplementation implements BeerService {
     public BeerServiceImplementation(String path) {
         fileManager = new FileServiceImplementation();
         beers = fileManager.readJsonFile(path);
-
+//        beerRepo.init();
     }
 
-    public void saveDataToDb(){
-        BeerRepo beerRepo = new BeerRepo();
-        beerRepo.init();
+    public void saveDataToDb() {
         beerRepo.saveBeers(beers);
     }
 
@@ -37,7 +36,7 @@ public class BeerServiceImplementation implements BeerService {
         beers.add(beer);
     }
 
-    public void addBrandsWithBeers(BrandsWithBeers bwb){
+    public void addBrandsWithBeers(BrandsWithBeers bwb) {
         brandsWithBeers.add(bwb);
     }
 
@@ -63,14 +62,15 @@ public class BeerServiceImplementation implements BeerService {
 //            if(brandAndBeers.contains(beer.getBrand())){
 //            }
 //        }
-        brandAndBeers = beers.stream().collect(Collectors.groupingBy(Beer::getBrand)).entrySet().stream()
-                .map(r -> new BrandsWithBeers(r.getKey(), r.getValue().stream().map(Beer::getId).toList()))
-                .toList();
+//        brandAndBeers = beers.stream().collect(Collectors.groupingBy(Beer::getBrand)).entrySet().stream()
+//                .map(r -> new BrandsWithBeers(r.getKey(), r.getValue().stream().map(Beer::getId).toList()))
+//                .toList();
 //        String stringFromJsonArrayResult = String.valueOf(addKeysToBrandAndBeers(brandAndBeers));
 //        String nameOfTheTask = "groupBeersByBrand";
 //        writeSolutionToJsonFile(stringFromJsonArrayResult, nameOfTheTask);
 //        System.out.println(stringFromJsonArrayResult);
 //        String nameOfTheTask = "groupBeersByBrand";
+        brandAndBeers = beerRepo.groupBeersByBrandDb();
         String nameOfTheTask = "group_beers_by_brand";
 
         convertToJson(brandAndBeers, 1, outputFormat, nameOfTheTask);
@@ -79,11 +79,12 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public List<String> filterBeersByBeerType(String type, int outputFormat) {
-        List<String> beerIds = beers.stream()
-                .filter(k -> k.getType().toLowerCase().equals(type))
-                .map(Beer::getId)
-                .collect(Collectors.toList());
-//        String nameOfTheTask = "filterBeersByBeerType";
+//        List<String> beerIds = beers.stream()
+//                .filter(k -> k.getType().toLowerCase().equals(type))
+//                .map(Beer::getId)
+//                .collect(Collectors.toList());
+////        String nameOfTheTask = "filterBeersByBeerType";
+        List<String> beerIds = beerRepo.filterBeersByBeerTypeDb(type).get();
         String nameOfTheTask = "filter_beers_by_type";
         convertToJson(beerIds, 2, outputFormat, nameOfTheTask);
         return beerIds;
@@ -91,34 +92,44 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public String getTheCheapestBrand(int outputFormat) {
-        Map<String, BrandsWithPrices> tempBrandsAndPrices = new HashMap<>();
+//        Map<String, BrandsWithPrices> tempBrandsAndPrices = new HashMap<>();
 
-        for (Beer bc : beers) {
-            String brand = bc.getBrand();
-            BrandsWithPrices tempBrandsWithPrices = tempBrandsAndPrices
-                    .computeIfAbsent(brand, k -> new BrandsWithPrices(brand));
-            tempBrandsWithPrices.incrementPrice(bc.getPrice());
-        }
-
-        BrandsWithPrices bwp = tempBrandsAndPrices.values().stream()
-                .min(Comparator.comparing(BrandsWithPrices::getAveragePrice))
+        List<BrandsWithPrices> brandsWithPrices = beerRepo.getTheCheapestBrandDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
-//        String nameOfTheTask = "getTheCheapestBrand";
+
+        String cheapestBrand = brandsWithPrices.stream()
+                .collect(Collectors.toMap(BrandsWithPrices::getBrandName, BrandsWithPrices::getAllPrice, Integer::sum))
+                .entrySet().stream()
+                .sorted(Comparator.comparing(k -> k.getValue())).map(k -> k.getKey()).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
+
+//        for (BrandsWithPrices actual : brandsWithPrices) {
+//            String brand = actual.getBrandName();
+//            BrandsWithPrices tempBrandsWithPrices = tempBrandsAndPrices
+//                    .computeIfAbsent(brand, k -> new BrandsWithPrices(brand));
+//            tempBrandsWithPrices.incrementPrice(actual.getAllPrice());
+//        }
+//
+//        BrandsWithPrices bwp = tempBrandsAndPrices.values().stream()
+//                .min(Comparator.comparing(BrandsWithPrices::getAveragePrice))
+//                .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
+////        String nameOfTheTask = "getTheCheapestBrand";
         String nameOfTheTask = "the_cheapest_brand";
-        convertToJson(bwp.getBrandName(), 3, outputFormat, nameOfTheTask);
-        return bwp.getBrandName();
+        convertToJson(cheapestBrand, 3, outputFormat, nameOfTheTask);
+        return cheapestBrand;
     }
 
     @Override
     public List<String> getIdsThatLackSpecificIngredient(String ingredient, int outputFormat) {
-        List<String> idsWithoutSpecificIngredient = new ArrayList<>();
-        for (Beer actual : beers) {
-            if (actual.checkIfIngredientNotInclude(ingredient)) {
-                idsWithoutSpecificIngredient.add(actual.getId());
-            }
-        }
-
-//        String nameOfTheTask = "getIdsThatLackSpecificIngredient";
+//        List<String> idsWithoutSpecificIngredient = new ArrayList<>();
+//        for (Beer actual : beers) {
+//            if (actual.checkIfIngredientNotInclude(ingredient)) {
+//                idsWithoutSpecificIngredient.add(actual.getId());
+//            }
+//        }
+//
+////        String nameOfTheTask = "getIdsThatLackSpecificIngredient";
+        List<String> idsWithoutSpecificIngredient = beerRepo.getIdsThatLackSpecificIngredientDb(ingredient).get();
         String nameOfTheTask = "get_ids_that_lack_from_specific_ingredient";
         convertToJson(idsWithoutSpecificIngredient, 4, outputFormat, nameOfTheTask);
         return idsWithoutSpecificIngredient;
@@ -126,15 +137,23 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public List<String> sortAllBeersByRemainingIngredientRatio(int outputFormat) {
-        beers.forEach(Beer::setWaterIngredient);
-        List<String> beerIds = beers.stream()
-                .sorted(Comparator.comparing(Beer::getWaterIngredient).thenComparing(Beer::getId))
-                .map(Beer::getId)
-                .toList();
+//        beers.forEach(Beer::setWaterIngredient);
+//        List<String> beerIds = beers.stream()
+//                .sorted(Comparator.comparing(Beer::getWaterIngredient).thenComparing(Beer::getId))
+//                .map(Beer::getId)
+//                .toList();
+        List<String> result = beerRepo.sortAllBeersByRemainingIngredientRatioDb()
+                .orElseThrow(() -> new IllegalArgumentException("No data in the list")).stream()
+                .collect(Collectors.toMap(BeerIdWithIngredientRatio::getId, BeerIdWithIngredientRatio::getRatio, Double::sum))
+                .entrySet().stream()
+                .sorted(Comparator.comparing(k -> k.getValue()))
+                .map(k -> k.getKey())
+                .collect(Collectors.toList());
+
 //        String nameOfTheTask = "sortAllBeersByRemainingIngredientRatio";
-        String nameOfTheTask = "sort_all_beers_by_remaining_ingredient_ratio";
-        convertToJson(beerIds, 5, outputFormat, nameOfTheTask);
-        return beerIds;
+                String nameOfTheTask = "sort_all_beers_by_remaining_ingredient_ratio";
+        convertToJson(result, 5, outputFormat, nameOfTheTask);
+        return result;
     }
 
     @Override

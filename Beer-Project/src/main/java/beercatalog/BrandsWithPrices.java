@@ -10,6 +10,11 @@ public class BrandsWithPrices {
         this.brandName = brandName;
     }
 
+    public BrandsWithPrices(String brandName, int allPrice) {
+        this.brandName = brandName;
+        this.allPrice = allPrice;
+    }
+
     public void incrementPrice(int price) {
         this.allPrice += price;
         numberOfBeersByBrand++;

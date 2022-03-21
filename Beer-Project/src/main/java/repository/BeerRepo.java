@@ -1,7 +1,7 @@
 package repository;
 
-import beercatalog.Beer;
-import beercatalog.Ingredient;
+import beercatalog.*;
+import controller.Brand;
 import org.mariadb.jdbc.MariaDbDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -9,8 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class BeerRepo {
     private static final String PATH_PROPERTIES = "/beerstore.properties";
@@ -50,5 +49,44 @@ public class BeerRepo {
             jdbcTemplate.update("insert into ingredients (beer_id, ingredient_name, ratio) values (?,?,?);",
                     beer.getId(), ingredient.getName(), ingredient.getRatio());
         }
+    }
+
+//    public Optional<List<String>> filterBeersByBeerType(String type) {
+//        return Optional.of(jdbcTemplate.query("select beer_id from beers where beer_type = ?;",
+//                (rs, rowNum) -> rs.getString("beer_type"),type));
+//    }
+
+//    public Optional<List<String>> filterBeersByBeerType(String type) {
+//        return Optional.of(jdbcTemplate.query("select beer_id from beers;",
+//                (rs, rowNum) -> rs.getString("beer_type")));
+//    }
+
+    public Optional<List<String>> filterBeersByBeerTypeDb(String type) {
+        return Optional.of(jdbcTemplate.query("select * from beers where beer_type = ?;",
+                (rs, rowNum) -> rs.getString("beer_id"),type));
+    }
+
+    public Optional<List<String>> getIdsThatLackSpecificIngredientDb(String ingredient) {
+        return Optional.of(jdbcTemplate.query("select * from ingredients where ingredient_name = ? AND ratio = 0;",
+                (rs, rowNum) -> rs.getString("beer_id"),ingredient));
+    }
+
+    public Optional<List<BrandsWithPrices>> getTheCheapestBrandDb() {
+        return Optional.of(jdbcTemplate.query("select * from beers;",
+                (rs, rowNum) -> new BrandsWithPrices(rs.getString("brand"),rs.getInt("price"))));
+    }
+
+    public Optional<List<BeerIdWithIngredientRatio>> sortAllBeersByRemainingIngredientRatioDb() {
+        return Optional.of(jdbcTemplate.query("select * from ingredients;",
+                (rs, rowNum) -> new BeerIdWithIngredientRatio(rs.getString("beer_id"),rs.getDouble("ratio"))));
+    }
+
+    public List<BrandsWithBeers> groupBeersByBrandDb(){
+        List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
+        for(Brand brand : Brand.values()){
+            brandsWithBeers.add(new BrandsWithBeers(brand.getName(),jdbcTemplate.query("select * from beers WHERE brand = ?;",
+                    (rs, rowNum) -> rs.getString("beer_id"),brand.getName())));
+        }
+        return brandsWithBeers;
     }
 }

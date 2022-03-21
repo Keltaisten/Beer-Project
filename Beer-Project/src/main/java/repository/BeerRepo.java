@@ -63,30 +63,35 @@ public class BeerRepo {
 
     public Optional<List<String>> filterBeersByBeerTypeDb(String type) {
         return Optional.of(jdbcTemplate.query("select * from beers where beer_type = ?;",
-                (rs, rowNum) -> rs.getString("beer_id"),type));
+                (rs, rowNum) -> rs.getString("beer_id"), type));
     }
 
     public Optional<List<String>> getIdsThatLackSpecificIngredientDb(String ingredient) {
         return Optional.of(jdbcTemplate.query("select * from ingredients where ingredient_name = ? AND ratio = 0;",
-                (rs, rowNum) -> rs.getString("beer_id"),ingredient));
+                (rs, rowNum) -> rs.getString("beer_id"), ingredient));
     }
 
-    public Optional<List<BrandsWithPrices>> getTheCheapestBrandDb() {
+    public Optional<List<BeerAndPrice>> getTheCheapestBrandDb() {
         return Optional.of(jdbcTemplate.query("select * from beers;",
-                (rs, rowNum) -> new BrandsWithPrices(rs.getString("brand"),rs.getInt("price"))));
+                (rs, rowNum) -> new BeerAndPrice(rs.getString("brand"), rs.getInt("price"))));
     }
 
     public Optional<List<BeerIdWithIngredientRatio>> sortAllBeersByRemainingIngredientRatioDb() {
         return Optional.of(jdbcTemplate.query("select * from ingredients;",
-                (rs, rowNum) -> new BeerIdWithIngredientRatio(rs.getString("beer_id"),rs.getDouble("ratio"))));
+                (rs, rowNum) -> new BeerIdWithIngredientRatio(rs.getString("beer_id"), rs.getDouble("ratio"))));
     }
 
-    public List<BrandsWithBeers> groupBeersByBrandDb(){
+    public List<BrandsWithBeers> groupBeersByBrandDb() {
         List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
-        for(Brand brand : Brand.values()){
-            brandsWithBeers.add(new BrandsWithBeers(brand.getName(),jdbcTemplate.query("select * from beers WHERE brand = ?;",
-                    (rs, rowNum) -> rs.getString("beer_id"),brand.getName())));
+        for (Brand brand : Brand.values()) {
+            brandsWithBeers.add(new BrandsWithBeers(brand.getName(), jdbcTemplate.query("select * from beers WHERE brand = ?;",
+                    (rs, rowNum) -> rs.getString("beer_id"), brand.getName())));
         }
         return brandsWithBeers;
+    }
+
+    public Optional<List<BeerAndPrice>> listBeersBasedOnTheirPriceWithATipDb() {
+        return Optional.of(jdbcTemplate.query("select * from beers;",
+                (rs, rowNum) -> new BeerAndPrice(rs.getString("beer_id"), rs.getInt("price"))));
     }
 }

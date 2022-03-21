@@ -3,7 +3,7 @@ package service;
 import beercatalog.Beer;
 import beercatalog.BeerIdWithIngredientRatio;
 import beercatalog.BrandsWithBeers;
-import beercatalog.BrandsWithPrices;
+import beercatalog.BeerAndPrice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import repository.BeerRepo;
@@ -94,11 +94,11 @@ public class BeerServiceImplementation implements BeerService {
     public String getTheCheapestBrand(int outputFormat) {
 //        Map<String, BrandsWithPrices> tempBrandsAndPrices = new HashMap<>();
 
-        List<BrandsWithPrices> brandsWithPrices = beerRepo.getTheCheapestBrandDb()
+        List<BeerAndPrice> brandsWithPrices = beerRepo.getTheCheapestBrandDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
 
         String cheapestBrand = brandsWithPrices.stream()
-                .collect(Collectors.toMap(BrandsWithPrices::getBrandName, BrandsWithPrices::getAllPrice, Integer::sum))
+                .collect(Collectors.toMap(BeerAndPrice::getBeer, BeerAndPrice::getPrice, Integer::sum))
                 .entrySet().stream()
                 .sorted(Comparator.comparing(k -> k.getValue())).map(k -> k.getKey()).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
@@ -158,6 +158,16 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(int outputFormat) {
+        Map<Integer, List<String>> beersAndPrices = new TreeMap<>(beerRepo.listBeersBasedOnTheirPriceWithATipDb()
+                .orElseThrow(() -> new IllegalArgumentException("No data in the list"))
+                .stream()
+                .collect(Collectors.groupingBy()));
+
+//        Map<Integer, List<String>> beersAndPrices = new TreeMap<>(beerRepo.listBeersBasedOnTheirPriceWithATipDb()
+//                .orElseThrow(() -> new IllegalArgumentException("No data in the list"))
+//                .stream()
+//                .collect(Collectors.toMap()));
+
         Map<Integer, List<String>> beersAndRoundedPrices = new TreeMap<>();
         for (Beer bc : beers) {
             int roundedPrice = ((bc.getPrice() + 99) / 100) * 100;
@@ -169,6 +179,10 @@ public class BeerServiceImplementation implements BeerService {
         String nameOfTheTask = "list_beers_based_on_their_price_with_a_tip";
         convertToJson(beersAndRoundedPrices, 6, outputFormat, nameOfTheTask);
         return beersAndRoundedPrices;
+    }
+
+    private int roundPrice(int price){
+        return 
     }
 
     public String convertToJson(Object o, int taskNumber, int outputFormat, String nameOfTheTask) {

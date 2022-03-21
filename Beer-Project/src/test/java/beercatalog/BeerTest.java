@@ -17,20 +17,19 @@ class BeerTest {
                     new Ingredient("wheat", 0.014),
                     new Ingredient("corn", 0)));
 
-    @BeforeEach
-    void init() {
+//    @BeforeEach
+//    void init() {
+//
+//    }
 
-    }
 
-
-    @Test
-    void checkIfIngredientNotInclude() {
-    }
-
-    @Test
-    void addIngredient() {
-
-    }
+//    @Test
+//    void checkIfIngredientNotInclude() {
+//    }
+//
+//    @Test
+//    void addIngredient() {
+//    }
 
     @Test
     void getName() {

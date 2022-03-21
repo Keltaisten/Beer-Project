@@ -3,13 +3,12 @@ package service;
 import beercatalog.Beer;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerImplementationTest {
-    FileManagerImplementation fmi = new FileManagerImplementation();
+    FileServiceImplementation fmi = new FileServiceImplementation();
 
     @Test
     void readJsonFileListSizeTest() {

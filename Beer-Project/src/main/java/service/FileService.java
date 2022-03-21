@@ -4,6 +4,6 @@ import beercatalog.Beer;
 
 import java.util.List;
 
-public interface FileManager {
+public interface FileService {
     List<Beer> readJsonFile(String path);
 }

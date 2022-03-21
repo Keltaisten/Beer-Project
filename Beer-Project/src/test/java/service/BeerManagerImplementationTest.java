@@ -11,7 +11,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BeerManagerImplementationTest {
-    BeerManagerImplementation beerManager = new BeerManagerImplementation();
+    BeerServiceImplementation beerManager = new BeerServiceImplementation();
 
     @BeforeEach
     void init() {

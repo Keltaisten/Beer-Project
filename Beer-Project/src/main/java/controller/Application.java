@@ -1,7 +1,8 @@
 package controller;
 
-import service.BeerManager;
-import service.BeerManagerImplementation;
+import beercatalog.Beer;
+import service.BeerService;
+import service.BeerServiceImplementation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,17 +23,28 @@ public class Application {
 
     public static void main(String[] args) {
         Application application = new Application();
-        BeerManager beerManager = new BeerManagerImplementation(PATH);
+        BeerService beerManager = new BeerServiceImplementation(PATH);
         application.openConsole(beerManager);
     }
 
-    public void openConsole(BeerManager beerManager) {
+    public void openConsole(BeerService beerService) {
         System.out.println("***********************\n   Beer Manager App\n***********************\n\nAdd your name:");
         String name;
         while (validator.validateName(name = scanner.nextLine())) {
         }
+        fillDatabaseOrNot(beerService);
         selectOutputFormat();
-        selectService(beerManager);
+        selectService(beerService);
+    }
+
+    private void fillDatabaseOrNot(BeerService beerService) {
+        System.out.println("Do you want to save data to DB?\n (Yes or No)");
+        String option;
+        while (validator.validateFillingDataBaseInput(option = scanner.nextLine())) {
+        }
+        if(option.equalsIgnoreCase("yes")){
+            beerService.saveDataToDb();
+        }
     }
 
     private void selectOutputFormat() {
@@ -51,13 +63,13 @@ public class Application {
                 break;
             case 3:
                 outputFormat = 3;
-                break;
-            default:
-                throw new IllegalArgumentException("Not ok input format: " + step);
+//                break;
+//            default:
+//                throw new IllegalArgumentException("Not ok input format: " + step);
         }
     }
 
-    private void selectService(BeerManager beerManager) {
+    private void selectService(BeerService beerManager) {
         int step;
         String line;
         do {
@@ -118,13 +130,13 @@ public class Application {
         return line;
     }
 
-    private String askNewInputIfPrevWasWrong() {
-        String line;
-        do {
-            line = scanner.nextLine().toLowerCase();
-        } while (validator.validateName(line));
-        return line;
-    }
+//    private String askNewInputIfPrevWasWrong() {
+//        String line;
+//        do {
+//            line = scanner.nextLine().toLowerCase();
+//        } while (validator.validateName(line));
+//        return line;
+//    }
 
     private String askForType() {
         System.out.println(new StringBuilder()

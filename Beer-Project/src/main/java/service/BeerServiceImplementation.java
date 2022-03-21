@@ -5,6 +5,7 @@ import beercatalog.BrandsWithBeers;
 import beercatalog.BrandsWithPrices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import repository.BeerRepo;
 import repository.BeerRepository;
 
 import java.io.File;
@@ -12,17 +13,24 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BeerManagerImplementation implements BeerManager {
+public class BeerServiceImplementation implements BeerService {
     private List<Beer> beers = new ArrayList<>();
-    private FileManager fileManager;
+    private FileService fileManager;
     private List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
 
-    public BeerManagerImplementation() {
+    public BeerServiceImplementation() {
     }
 
-    public BeerManagerImplementation(String path) {
-        fileManager = new FileManagerImplementation();
+    public BeerServiceImplementation(String path) {
+        fileManager = new FileServiceImplementation();
         beers = fileManager.readJsonFile(path);
+
+    }
+
+    public void saveDataToDb(){
+        BeerRepo beerRepo = new BeerRepo();
+        beerRepo.init();
+        beerRepo.saveBeers(beers);
     }
 
     public void addBeer(Beer beer) {
@@ -155,9 +163,9 @@ public class BeerManagerImplementation implements BeerManager {
             } else if (outputFormat == 2) {
                 objectMapper.writeValue(new File(taskNumber + ". " + nameOfTheTask + ".json"), o);
             } else if (outputFormat == 3) {
-                BeerRepository beerRepository = new BeerRepository();
-                beerRepository.init();
-                beerRepository.separate(o, taskNumber, nameOfTheTask);
+//                BeerRepository beerRepository = new BeerRepository();
+//                beerRepository.init();
+//                beerRepository.separate(o, taskNumber, nameOfTheTask);
             }
             return result;
         } catch (IOException ioe) {
@@ -169,7 +177,7 @@ public class BeerManagerImplementation implements BeerManager {
         return beers;
     }
 
-    public FileManager getFileManager() {
+    public FileService getFileManager() {
         return fileManager;
     }
 

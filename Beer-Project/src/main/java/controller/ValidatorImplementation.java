@@ -84,4 +84,18 @@ public class ValidatorImplementation implements Validator {
             return true;
         }
     }
+
+    public boolean validateFillingDataBaseInput(String nextLine) {
+        String line = nextLine.toLowerCase();
+        if (nextLine == null || nextLine.trim().equals("")) {
+            System.out.println("No given parameter");
+            return true;
+        } else if("yes".equals(nextLine) || "no".equals(nextLine)){
+            return false;
+        }
+        else {
+            System.out.println("Given parameter is not ok: " + nextLine);
+            return true;
+        }
+    }
 }

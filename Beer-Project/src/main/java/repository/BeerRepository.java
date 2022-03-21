@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.*;
 
 public class BeerRepository {
+    private static final String PATH_PROPERTIES = "/beerstore.properties";
     private MariaDbDataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
@@ -21,7 +22,8 @@ public class BeerRepository {
 
     public MariaDbDataSource init() {
         Properties prop = new Properties();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(BeerRepository.class.getResourceAsStream("/beerstore.properties")))) {
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(BeerRepository.class.getResourceAsStream(PATH_PROPERTIES)))) {
             prop.load(br);
             MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));
@@ -102,6 +104,9 @@ public class BeerRepository {
                         rs.getString("name_of_brand"),
                 id);
     }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     public String findById(long id) {
         return jdbcTemplate.queryForObject(

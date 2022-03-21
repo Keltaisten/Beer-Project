@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class FileManagerImplementation implements FileManager {
+public class FileServiceImplementation implements FileService {
 
     @Override
     public List<Beer> readJsonFile(String path) {

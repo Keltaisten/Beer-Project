@@ -10,12 +10,12 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 
-public class BeerRepository {
+public class BeerRepositoryOld {
     private static final String PATH_PROPERTIES = "/beerstore.properties";
     private MariaDbDataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
-    public BeerRepository() {
+    public BeerRepositoryOld() {
         this.dataSource = init();
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -23,7 +23,7 @@ public class BeerRepository {
     public MariaDbDataSource init() {
         Properties prop = new Properties();
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(BeerRepository.class.getResourceAsStream(PATH_PROPERTIES)))) {
+                new InputStreamReader(BeerRepositoryOld.class.getResourceAsStream(PATH_PROPERTIES)))) {
             prop.load(br);
             MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));

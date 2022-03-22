@@ -1,5 +1,5 @@
-//package controller;
-//
-//public enum Ingredients {
-//    BARLEY,CORN,SALT,SUGAR,WHEAT;
-//}
+package controller;
+
+public enum Ingredients {
+    BARLEY,CORN,SALT,SUGAR,WHEAT;
+}

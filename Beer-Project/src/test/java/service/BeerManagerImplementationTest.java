@@ -5,6 +5,7 @@ import beercatalog.BrandsWithBeers;
 import beercatalog.Ingredient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repository.BeerRepoImplementation;
 
 import java.util.*;
 
@@ -57,6 +58,8 @@ class BeerManagerImplementationTest {
         beerManager.addBrandsWithBeers(brandsWithBeers1);
         beerManager.addBrandsWithBeers(brandsWithBeers2);
         beerManager.addBrandsWithBeers(brandsWithBeers3);
+        BeerRepoImplementation beerRepo = new BeerRepoImplementation();
+        beerRepo.saveBeers(beerManager.getBeers());
     }
 
     @Test

@@ -12,14 +12,14 @@ public class Beer {
     private List<Ingredient> ingredients;
     private double waterIngredient;
 
-    public boolean checkIfIngredientNotInclude(String ingredient) {
-        for (Ingredient actual : ingredients) {
-            if (actual.getName().equals(ingredient) && actual.getRatio() == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean checkIfIngredientNotInclude(String ingredient) {
+//        for (Ingredient actual : ingredients) {
+//            if (actual.getName().equals(ingredient) && actual.getRatio() == 0) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public Beer() {
     }

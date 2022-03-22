@@ -13,7 +13,7 @@ public class Application {
     public static final String PATH = "src/main/resources/demo.json";
     public static final List<String> TYPES = Arrays.asList("brown","corn","pale ale","wheat","white");
     public static final List<String> INGREDIENTS = Arrays.asList("barley","corn","salt","sugar","wheat");
-    private static final String OUTPUT_FORMAT_NUMBERS = "123";
+    private static final String OUTPUT_FORMAT_NUMBERS = "12";
     private static final String SERVICE_FORMAT_NUMBERS = "12345678";
 
     ValidatorImplementation validator = new ValidatorImplementation();
@@ -60,12 +60,6 @@ public class Application {
                 break;
             case 2:
                 outputFormat = 2;
-                break;
-            case 3:
-                outputFormat = 3;
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Not ok input format: " + step);
         }
     }
 
@@ -129,14 +123,6 @@ public class Application {
         }
         return line;
     }
-
-//    private String askNewInputIfPrevWasWrong() {
-//        String line;
-//        do {
-//            line = scanner.nextLine().toLowerCase();
-//        } while (validator.validateName(line));
-//        return line;
-//    }
 
     private String askForType() {
         System.out.println(new StringBuilder()

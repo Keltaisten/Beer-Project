@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BeerRepositoryTest {
 
-    BeerRepository beerRepository = new BeerRepository();
+    BeerRepositoryOld beerRepository = new BeerRepositoryOld();
 
     @BeforeEach
     void initTest() {
         Properties prop = new Properties();
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(BeerRepository.class.getResourceAsStream("/beerstore.properties")))) {
+                new InputStreamReader(BeerRepositoryOld.class.getResourceAsStream("/beerstore.properties")))) {
             prop.load(br);
             MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));

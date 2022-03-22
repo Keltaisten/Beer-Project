@@ -11,8 +11,8 @@ import java.util.Scanner;
 public class Application {
 
     public static final String PATH = "src/main/resources/demo.json";
-    public static final List<String> TYPES = Arrays.asList("brown","corn","pale ale","wheat","white");
-    public static final List<String> INGREDIENTS = Arrays.asList("barley","corn","salt","sugar","wheat");
+    public static final List<String> TYPES = Arrays.asList("brown", "corn", "pale ale", "wheat", "white");
+    public static final List<String> INGREDIENTS = Arrays.asList("barley", "corn", "salt", "sugar", "wheat");
     private static final String OUTPUT_FORMAT_NUMBERS = "12";
     private static final String SERVICE_FORMAT_NUMBERS = "12345678";
 
@@ -42,7 +42,7 @@ public class Application {
         String option;
         while (validator.validateFillingDataBaseInput(option = scanner.nextLine())) {
         }
-        if(option.equalsIgnoreCase("yes")){
+        if (option.equalsIgnoreCase("yes")) {
             beerService.saveDataToDb();
         }
     }
@@ -66,6 +66,7 @@ public class Application {
     private void selectService(BeerService beerManager) {
         int step;
         String line;
+        Service service;
         do {
             serviceMessage();
             while (validator.validateNumbers(line = scanner.nextLine(), SERVICE_FORMAT_NUMBERS)) {
@@ -119,7 +120,7 @@ public class Application {
                 .append("salt\n").append("sugar\n")
                 .append("wheat\n").toString());
         String line;
-        while (validator.validateInput(line = scanner.nextLine().toLowerCase(),INGREDIENTS)){
+        while (validator.validateInput(line = scanner.nextLine().toLowerCase(), INGREDIENTS)) {
         }
         return line;
     }
@@ -131,7 +132,7 @@ public class Application {
                 .append("Pale Ale\n").append("Wheat\n")
                 .append("White\n").toString());
         String line;
-        while (validator.validateInput(line = scanner.nextLine().toLowerCase(),TYPES)){
+        while (validator.validateInput(line = scanner.nextLine().toLowerCase(), TYPES)) {
         }
         return line;
     }

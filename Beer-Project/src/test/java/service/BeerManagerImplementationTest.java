@@ -3,6 +3,7 @@ package service;
 import beercatalog.Beer;
 import beercatalog.BrandsWithBeers;
 import beercatalog.Ingredient;
+import controller.OutputFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repository.BeerRepoImplementation;
@@ -64,55 +65,55 @@ class BeerManagerImplementationTest {
 
     @Test
     void groupBeersByBrand() {
-        assertEquals(2, beerManager.groupBeersByBrand(0).get(2).getBeers().size());
-        assertEquals("Share", beerManager.groupBeersByBrand(0).get(2).getBrand());
-        assertEquals("Coding Challenge Brewery", beerManager.groupBeersByBrand(0)
+        assertEquals(2, beerManager.groupBeersByBrand(null).get(2).getBeers().size());
+        assertEquals("Share", beerManager.groupBeersByBrand(null).get(2).getBrand());
+        assertEquals("Coding Challenge Brewery", beerManager.groupBeersByBrand(null)
                 .get(0).getBrand());
-        assertEquals(beerManager.getBrandsWithBeers(), beerManager.groupBeersByBrand(0));
+        assertEquals(beerManager.getBrandsWithBeers(), beerManager.groupBeersByBrand(null));
 
     }
 
     @Test
     void filterBeersByBeerType() {
-        assertEquals(Arrays.asList("ccw-1", "sw-1"), beerManager.filterBeersByBeerType("white", 0));
-        assertEquals(0, beerManager.filterBeersByBeerType("brown", 0).size());
+        assertEquals(Arrays.asList("ccw-1", "sw-1"), beerManager.filterBeersByBeerType("white", null));
+        assertEquals(0, beerManager.filterBeersByBeerType("brown", null).size());
     }
 
     @Test
     void getTheCheapestBrandTest() {
-        assertEquals("Level Up Brewery", beerManager.getTheCheapestBrand(0));
+        assertEquals("Level Up Brewery", beerManager.getTheCheapestBrand(null));
     }
 
     @Test
     void getTheCheapestBrandWithEmptyListTest() {
         beerManager.getBeers().clear();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> beerManager.getTheCheapestBrand(0));
+                () -> beerManager.getTheCheapestBrand(null));
         assertEquals("No data in the list", exception.getMessage());
     }
 
     @Test
     void getIdsThatLackSpecificIngredient() {
-        assertEquals(Arrays.asList("lupa-1", "spa-1"), beerManager.getIdsThatLackSpecificIngredient("wheat", 0));
-        assertEquals(0, beerManager.getIdsThatLackSpecificIngredient("sugar", 0).size());
+        assertEquals(Arrays.asList("lupa-1", "spa-1"), beerManager.getIdsThatLackSpecificIngredient("wheat", null));
+        assertEquals(0, beerManager.getIdsThatLackSpecificIngredient("sugar", null).size());
     }
 
     @Test
     void sortAllBeersByRemainingIngredientRatio() {
         List<String> beers = Arrays.asList("ccw-1", "lupa-1", "spa-1", "sw-1");
-        assertEquals(beers, beerManager.sortAllBeersByRemainingIngredientRatio(0));
+        assertEquals(beers, beerManager.sortAllBeersByRemainingIngredientRatio(null));
     }
 
     @Test
     void listBeersBasedOnTheirPriceWithATip() {
-        assertEquals(4700, beerManager.listBeersBasedOnTheirPriceWithATip(0).keySet().toArray()[1]);
-        assertEquals(Arrays.asList("sw-1"), beerManager.listBeersBasedOnTheirPriceWithATip(0).get(6500));
+        assertEquals(4700, beerManager.listBeersBasedOnTheirPriceWithATip(null).keySet().toArray()[1]);
+        assertEquals(Arrays.asList("sw-1"), beerManager.listBeersBasedOnTheirPriceWithATip(null).get(6500));
     }
 
     @Test
     void convertToJsonWriteToFileExceptionTest() {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> beerManager.convertToJson("word",2,2,"\"/:?*!<>|"));
+                () -> beerManager.convertToJson("word",2, OutputFormat.JSON_FILE,"\"/:?*!<>|"));
         assertEquals("Cannot write file", exception.getMessage());
     }
 }

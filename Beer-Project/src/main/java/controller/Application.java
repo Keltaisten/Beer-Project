@@ -7,21 +7,21 @@ import service.BeerServiceImplementation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Application {
 
     public static final String PATH = "src/main/resources/demo.json";
-    public static final List<String> TYPES = Arrays.asList("brown", "corn", "pale ale", "wheat", "white");
-    public static final List<String> INGREDIENTS = Arrays.asList("barley", "corn", "salt", "sugar", "wheat");
-    private static final String OUTPUT_FORMAT_NUMBERS = "12";
     private static final String SERVICE_FORMAT_NUMBERS = "12345678";
-
+//    private OutputFormat outputFormate;
     ValidatorImplementation validator = new ValidatorImplementation();
     Scanner scanner = new Scanner(System.in);
-    private int outputFormat;
+//    private int outputFormat;
     //    private String name;
 
     public static void main(String[] args) {
+//        System.out.println(OutputFormat.values().toString());
+//        System.out.println(Arrays.stream(OutputFormat.values()).map(OutputFormat::getNumber).collect(Collectors.toList()));
         Application application = new Application();
         BeerService beerManager = new BeerServiceImplementation(PATH);
         application.openConsole(beerManager);
@@ -33,8 +33,8 @@ public class Application {
         while (validator.validateName(name = scanner.nextLine())) {
         }
         fillDatabaseOrNot(beerService);
-        selectOutputFormat();
-        selectService(beerService);
+        OutputFormat output = selectOutputFormat();
+        selectService(beerService, output);
     }
 
     private void fillDatabaseOrNot(BeerService beerService) {
@@ -47,26 +47,28 @@ public class Application {
         }
     }
 
-    private void selectOutputFormat() {
+    private OutputFormat selectOutputFormat() {
         System.out.println("\nSelect output format:\n1. Console\n2. Write to Json file\n3. Write to database");
         String line;
         int step;
-        while (validator.validateNumbers(line = scanner.nextLine(), OUTPUT_FORMAT_NUMBERS)) {
+        String outputFormatNumbers = Arrays.stream(OutputFormat.values()).map(OutputFormat::getNumber).toString();
+        while (validator.validateNumbers(line = scanner.nextLine(), outputFormatNumbers)) {
         }
         step = Integer.parseInt(line);
         switch (step) {
             case 1:
-                outputFormat = 1;
-                break;
+//                outputFormat = 1;
+                return OutputFormat.CONSOLE;
             case 2:
-                outputFormat = 2;
+//                outputFormat = 2;
+                return OutputFormat.JSON_FILE;
         }
+        throw new IllegalStateException("Not ok input");
     }
 
-    private void selectService(BeerService beerManager) {
+    private void selectService(BeerService beerManager, OutputFormat outputFormat) {
         int step;
         String line;
-        Service service;
         do {
             serviceMessage();
             while (validator.validateNumbers(line = scanner.nextLine(), SERVICE_FORMAT_NUMBERS)) {
@@ -120,7 +122,7 @@ public class Application {
                 .append("salt\n").append("sugar\n")
                 .append("wheat\n").toString());
         String line;
-        while (validator.validateInput(line = scanner.nextLine().toLowerCase(), INGREDIENTS)) {
+        while (validator.validateIngredient(line = scanner.nextLine().toLowerCase())) {
         }
         return line;
     }
@@ -132,7 +134,7 @@ public class Application {
                 .append("Pale Ale\n").append("Wheat\n")
                 .append("White\n").toString());
         String line;
-        while (validator.validateInput(line = scanner.nextLine().toLowerCase(), TYPES)) {
+        while (validator.validateType(line = scanner.nextLine().toLowerCase())) {
         }
         return line;
     }

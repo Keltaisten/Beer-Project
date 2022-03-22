@@ -1,16 +1,17 @@
 package service;
 
 import beercatalog.BrandsWithBeers;
+import controller.OutputFormat;
 
 import java.util.List;
 import java.util.Map;
 
 public interface BeerService {
-    List<BrandsWithBeers> groupBeersByBrand(int outputFormat);     //not finished
-    List<String> filterBeersByBeerType(String type, int outputFormat);      //done
-    String getTheCheapestBrand(int outputFormat);       //done
-    List<String> getIdsThatLackSpecificIngredient(String ingredient, int outputFormat);     //done
-    List<String> sortAllBeersByRemainingIngredientRatio(int outputFormat);        //maybe done
-    Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(int outputFormat);        //done
+    List<BrandsWithBeers> groupBeersByBrand(OutputFormat outputFormat);     //not finished
+    List<String> filterBeersByBeerType(String type, OutputFormat outputFormat);      //done
+    String getTheCheapestBrand(OutputFormat outputFormat);       //done
+    List<String> getIdsThatLackSpecificIngredient(String ingredient, OutputFormat outputFormat);     //done
+    List<String> sortAllBeersByRemainingIngredientRatio(OutputFormat outputFormat);        //maybe done
+    Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(OutputFormat outputFormat);        //done
     void saveDataToDb();
 }

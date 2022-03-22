@@ -6,6 +6,7 @@ import beercatalog.BrandsWithBeers;
 import beercatalog.BeerAndPrice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import controller.OutputFormat;
 import repository.BeerRepo;
 import repository.BeerRepoImplementation;
 
@@ -41,7 +42,7 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public List<BrandsWithBeers> groupBeersByBrand(int outputFormat) {
+    public List<BrandsWithBeers> groupBeersByBrand(OutputFormat outputFormat) {
         List<BrandsWithBeers> brandAndBeers = beerRepo.groupBeersByBrandDb();
         String nameOfTheTask = "group_beers_by_brand";
         convertToJson(brandAndBeers, 1, outputFormat, nameOfTheTask);
@@ -49,7 +50,7 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public List<String> filterBeersByBeerType(String type, int outputFormat) {
+    public List<String> filterBeersByBeerType(String type, OutputFormat outputFormat) {
         List<String> beerIds = beerRepo.filterBeersByBeerTypeDb(type).get();
         String nameOfTheTask = "filter_beers_by_type";
         convertToJson(beerIds, 2, outputFormat, nameOfTheTask);
@@ -57,7 +58,7 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public String getTheCheapestBrand(int outputFormat) {
+    public String getTheCheapestBrand(OutputFormat outputFormat) {
         List<BeerAndPrice> brandsWithPrices = beerRepo.getTheCheapestBrandDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
 
@@ -72,7 +73,7 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public List<String> getIdsThatLackSpecificIngredient(String ingredient, int outputFormat) {
+    public List<String> getIdsThatLackSpecificIngredient(String ingredient, OutputFormat outputFormat) {
         List<String> idsWithoutSpecificIngredient = beerRepo.getIdsThatLackSpecificIngredientDb(ingredient)
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
         String nameOfTheTask = "get_ids_that_lack_from_specific_ingredient";
@@ -81,7 +82,7 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public List<String> sortAllBeersByRemainingIngredientRatio(int outputFormat) {
+    public List<String> sortAllBeersByRemainingIngredientRatio(OutputFormat outputFormat) {
         List<String> result = beerRepo.sortAllBeersByRemainingIngredientRatioDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list")).stream()
                 .collect(Collectors.toMap(BeerIdWithIngredientRatio::getId, BeerIdWithIngredientRatio::getRatio, Double::sum))
@@ -95,7 +96,7 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(int outputFormat) {
+    public Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(OutputFormat outputFormat) {
         List<BeerAndPrice> beersAndPrices = new ArrayList<>(beerRepo.listBeersBasedOnTheirPriceWithATipDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list")));
 
@@ -114,15 +115,15 @@ public class BeerServiceImplementation implements BeerService {
         return ((price + 99) / 100) * 100;
     }
 
-    public String convertToJson(Object o, int taskNumber, int outputFormat, String nameOfTheTask) {
+    public String convertToJson(Object o, int taskNumber, OutputFormat outputFormat, String nameOfTheTask) {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
         String result;
         try {
             result = objectMapper.writeValueAsString(o);
-            if (outputFormat == 1) {
+            if (outputFormat.getNumber() == 1) {
                 System.out.println(result);
-            } else if (outputFormat == 2) {
+            } else if (outputFormat.getNumber() == 2) {
                 objectMapper.writeValue(new File(taskNumber + ". " + nameOfTheTask + ".json"), o);
             }
             return result;

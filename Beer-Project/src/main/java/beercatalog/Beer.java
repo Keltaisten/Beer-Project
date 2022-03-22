@@ -1,5 +1,6 @@
 package beercatalog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Beer {
@@ -9,7 +10,7 @@ public class Beer {
     private String type;
     private int price;
     private double alcohol;
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredients = new ArrayList<>();
     private double waterIngredient;
 
 //    public boolean checkIfIngredientNotInclude(String ingredient) {
@@ -37,6 +38,10 @@ public class Beer {
 
     public void addIngredient(Ingredient ingredient){
         ingredients.add(ingredient);
+    }
+
+    public void addIngredients(List<Ingredient> ingredients){
+        ingredients.addAll(ingredients);
     }
 
     @Override

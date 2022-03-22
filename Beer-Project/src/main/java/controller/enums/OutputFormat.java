@@ -1,4 +1,4 @@
-package controller;
+package controller.enums;
 
 public enum OutputFormat {
     CONSOLE("console",1), JSON_FILE("jsonFile",2);

@@ -1,46 +1,42 @@
 package controller;
 
-import beercatalog.Beer;
+import controller.enums.OutputFormat;
+import controller.enums.Service;
+import controller.validator.ValidatorImplementation;
 import service.BeerService;
 import service.BeerServiceImplementation;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Application {
 
     public static final String PATH = "src/main/resources/demo.json";
-    private static final String SERVICE_FORMAT_NUMBERS = "12345678";
-//    private OutputFormat outputFormate;
     ValidatorImplementation validator = new ValidatorImplementation();
     Scanner scanner = new Scanner(System.in);
-//    private int outputFormat;
-    //    private String name;
+//    private static String name;
 
     public static void main(String[] args) {
-//        System.out.println(OutputFormat.values().toString());
-//        System.out.println(Arrays.stream(OutputFormat.values()).map(OutputFormat::getNumber).collect(Collectors.toList()));
         Application application = new Application();
-        BeerService beerManager = new BeerServiceImplementation(PATH);
-        application.openConsole(beerManager);
+        BeerService beerService = new BeerServiceImplementation(PATH);
+        application.openConsole(beerService);
     }
 
     public void openConsole(BeerService beerService) {
         System.out.println("***********************\n   Beer Manager App\n***********************\n\nAdd your name:");
         String name;
-        while (validator.validateName(name = scanner.nextLine())) {
+        while (!validator.validateName(name = scanner.nextLine())) {
         }
         fillDatabaseOrNot(beerService);
         OutputFormat output = selectOutputFormat();
-        selectService(beerService, output);
+        selectService(beerService, output, name);
     }
 
     private void fillDatabaseOrNot(BeerService beerService) {
         System.out.println("Do you want to save data to DB?\n (Yes or No)");
         String option;
-        while (validator.validateFillingDataBaseInput(option = scanner.nextLine())) {
+        while (!validator.validateFillingDataBaseInput(option = scanner.nextLine())) {
         }
         if (option.equalsIgnoreCase("yes")) {
             beerService.saveDataToDb();
@@ -51,8 +47,8 @@ public class Application {
         System.out.println("\nSelect output format:\n1. Console\n2. Write to Json file\n3. Write to database");
         String line;
         int step;
-        String outputFormatNumbers = Arrays.stream(OutputFormat.values()).map(OutputFormat::getNumber).toString();
-        while (validator.validateNumbers(line = scanner.nextLine(), outputFormatNumbers)) {
+        List<Integer> outputFormatNumbers = Arrays.stream(OutputFormat.values()).map(OutputFormat::getNumber).toList();
+        while (!validator.validateNumbers(line = scanner.nextLine(), outputFormatNumbers)) {
         }
         step = Integer.parseInt(line);
         switch (step) {
@@ -66,39 +62,46 @@ public class Application {
         throw new IllegalStateException("Not ok input");
     }
 
-    private void selectService(BeerService beerManager, OutputFormat outputFormat) {
+    private void selectService(BeerService beerManager, OutputFormat outputFormat, String name) {
         int step;
         String line;
         do {
             serviceMessage();
-            while (validator.validateNumbers(line = scanner.nextLine(), SERVICE_FORMAT_NUMBERS)) {
+            List<Integer> services = Arrays.stream(Service.values()).map(Service::getNumber).toList();
+            while (!validator.validateNumbers(line = scanner.nextLine(), services)) {
             }
             step = Integer.parseInt(line);
             switch (step) {
                 case 1:
-                    beerManager.groupBeersByBrand(outputFormat);
+                    beerManager.groupBeersByBrand(outputFormat, name);
                     break;
                 case 2:
                     String type = askForType();
-                    beerManager.filterBeersByBeerType(type, outputFormat);
+                    beerManager.filterBeersByBeerType(type, outputFormat, name);
                     break;
                 case 3:
-                    beerManager.getTheCheapestBrand(outputFormat);
+                    beerManager.getTheCheapestBrand(outputFormat, name);
                     break;
                 case 4:
                     String ingredient = askForIngredient();
-                    beerManager.getIdsThatLackSpecificIngredient(ingredient, outputFormat);
+                    beerManager.getIdsThatLackSpecificIngredient(ingredient, outputFormat, name);
                     break;
                 case 5:
-                    beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat);
+                    beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat, name);
                     break;
                 case 6:
-                    beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat);
+                    beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat, name);
                     break;
                 case 7:
+                    beerManager.updatePrice();
+                    break;
+                case 8:
                     selectOutputFormat();
+                    break;
+                case 9:
+//                    selectOutputFormat();
             }
-        } while (step != 8);
+        } while (step != 0);
     }
 
     private void serviceMessage() {
@@ -110,8 +113,10 @@ public class Application {
                 .append("4. Get ids that lack from specific ingredient\n")
                 .append("5. Sort all beers by remaining ingredient ratio\n")
                 .append("6. List beers based on their price with a tip\n")
-                .append("7. Back\n")
-                .append("8. Exit\n")
+                .append("7. Round all price to hundred\n")
+                .append("8. Delete beer by beer id\n")
+                .append("9. Back\n")
+                .append("0. Exit\n")
                 .toString());
     }
 
@@ -122,7 +127,7 @@ public class Application {
                 .append("salt\n").append("sugar\n")
                 .append("wheat\n").toString());
         String line;
-        while (validator.validateIngredient(line = scanner.nextLine().toLowerCase())) {
+        while (!validator.validateIngredient(line = scanner.nextLine().toLowerCase())) {
         }
         return line;
     }
@@ -134,7 +139,7 @@ public class Application {
                 .append("Pale Ale\n").append("Wheat\n")
                 .append("White\n").toString());
         String line;
-        while (validator.validateType(line = scanner.nextLine().toLowerCase())) {
+        while (!validator.validateType(line = scanner.nextLine().toLowerCase())) {
         }
         return line;
     }

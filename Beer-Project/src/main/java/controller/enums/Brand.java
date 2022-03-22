@@ -1,4 +1,4 @@
-package controller;
+package controller.enums;
 
 public enum Brand {
     CCB("Coding Challenge Brewery"), LUB("Level Up Brewery"), BSB("Beer Sans Brewery"),

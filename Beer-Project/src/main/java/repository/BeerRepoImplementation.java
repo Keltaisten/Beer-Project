@@ -1,9 +1,12 @@
 package repository;
 
 import beercatalog.*;
-import controller.Brand;
+import controller.enums.Brand;
 import org.mariadb.jdbc.MariaDbDataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
+import service.BeerServiceImplementation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -91,5 +94,86 @@ public class BeerRepoImplementation implements BeerRepo {
     public Optional<List<BeerAndPrice>> listBeersBasedOnTheirPriceWithATipDb() {
         return Optional.of(jdbcTemplate.query("select * from beers;",
                 (rs, rowNum) -> new BeerAndPrice(rs.getString("beer_id"), rs.getInt("price"))));
+    }
+
+    public String findBrandById(long id) {
+        return jdbcTemplate.queryForObject(
+                "select * from the_cheapest_brand where id = ?;",
+                (rs, rowNum) ->
+                        rs.getString("name_of_brand"),
+                id);
+    }
+
+    public String findByIdInBeers(String id) {
+        return jdbcTemplate.queryForObject(
+                "select * from beers where beer_id = ?;",
+                (rs, rowNum) ->
+                        rs.getString("ratio"),
+                id);
+    }
+
+    public Double findByIdInIngredients(long id) {
+        return jdbcTemplate.queryForObject(
+                "select * from ingredients where id = ?;",
+                (rs, rowNum) ->
+                        rs.getDouble("ratio"),
+                id);
+    }
+
+    public Double findByIdInIngredientsSum(String id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT SUM() from ingredients where beer_id = ?;",
+                (rs, rowNum) ->
+                        rs.getDouble("ratio"),
+                id);
+    }
+
+    @Transactional
+    public List<BeerAndPrice> updatePrice() {
+        List<BeerAndPrice> prices = jdbcTemplate.query("select * from beers;",
+                (rs, rowNum) -> new BeerAndPrice(rs.getString("beer_id"),
+                        new BeerServiceImplementation().roundPrice(rs.getInt("price"))));
+//                .stream().map(k -> new BeerServiceImplementation().roundPrice(k.getPrice()))
+//                .toList();
+        for (int i = 0; i < prices.size(); i++) {
+            jdbcTemplate.update("update beers set price = ? where beer_id = ?;",
+                    prices.get(i).getPrice(), prices.get(i).getBeer());
+        }
+        return prices;
+    }
+
+    public Beer findBeerByIdInBeers(String id) {
+        Beer beer;
+        try {
+        beer = jdbcTemplate.queryForObject(
+                "select * from beers where beer_id = ?;",
+                (rs, rowNum) ->
+                        new Beer(rs.getString("beer_id"),
+                                rs.getString("beer_name"),
+                                rs.getString("brand"),
+                                rs.getString("beer_type"),
+                                rs.getInt("price"),
+                                rs.getDouble("alcohol"),
+                                new ArrayList<>()),
+                id);
+        }catch (EmptyResultDataAccessException erdae){
+            throw new IllegalArgumentException("No beer on this id: " + id,erdae);
+        }
+        if (beer != null) {
+            beer.addIngredients(findIngredientsById(id));
+        }
+//        else {
+//            throw new IllegalArgumentException("No beer on this id: " + id);
+//        }
+        return beer;
+    }
+
+    public List<Ingredient> findIngredientsById(String id) {
+        return jdbcTemplate.query(
+                "select * from ingredients where beer_id = ?;",
+                (rs, rowNum) ->
+                        new Ingredient(rs.getString("ingredient_name"),
+                                rs.getDouble("ratio")),
+                id);
     }
 }

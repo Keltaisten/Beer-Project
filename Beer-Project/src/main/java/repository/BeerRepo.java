@@ -17,4 +17,6 @@ public interface BeerRepo {
     Optional<List<BeerIdWithIngredientRatio>> sortAllBeersByRemainingIngredientRatioDb();
     List<BrandsWithBeers> groupBeersByBrandDb();
     Optional<List<BeerAndPrice>> listBeersBasedOnTheirPriceWithATipDb();
+    List<BeerAndPrice> updatePrice();
+
 }

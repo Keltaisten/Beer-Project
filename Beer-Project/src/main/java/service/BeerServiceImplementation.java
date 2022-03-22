@@ -6,7 +6,8 @@ import beercatalog.BrandsWithBeers;
 import beercatalog.BeerAndPrice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import controller.OutputFormat;
+import controller.Application;
+import controller.enums.OutputFormat;
 import repository.BeerRepo;
 import repository.BeerRepoImplementation;
 
@@ -42,23 +43,23 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public List<BrandsWithBeers> groupBeersByBrand(OutputFormat outputFormat) {
+    public List<BrandsWithBeers> groupBeersByBrand(OutputFormat outputFormat, String name) {
         List<BrandsWithBeers> brandAndBeers = beerRepo.groupBeersByBrandDb();
         String nameOfTheTask = "group_beers_by_brand";
-        convertToJson(brandAndBeers, 1, outputFormat, nameOfTheTask);
+        convertToJson(brandAndBeers, 1, outputFormat, nameOfTheTask, name);
         return brandAndBeers;
     }
 
     @Override
-    public List<String> filterBeersByBeerType(String type, OutputFormat outputFormat) {
+    public List<String> filterBeersByBeerType(String type, OutputFormat outputFormat, String name) {
         List<String> beerIds = beerRepo.filterBeersByBeerTypeDb(type).get();
         String nameOfTheTask = "filter_beers_by_type";
-        convertToJson(beerIds, 2, outputFormat, nameOfTheTask);
+        convertToJson(beerIds, 2, outputFormat, nameOfTheTask, name);
         return beerIds;
     }
 
     @Override
-    public String getTheCheapestBrand(OutputFormat outputFormat) {
+    public String getTheCheapestBrand(OutputFormat outputFormat, String name) {
         List<BeerAndPrice> brandsWithPrices = beerRepo.getTheCheapestBrandDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
 
@@ -68,21 +69,21 @@ public class BeerServiceImplementation implements BeerService {
                 .sorted(Comparator.comparing(k -> k.getValue())).map(k -> k.getKey()).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
         String nameOfTheTask = "the_cheapest_brand";
-        convertToJson(cheapestBrand, 3, outputFormat, nameOfTheTask);
+        convertToJson(cheapestBrand, 3, outputFormat, nameOfTheTask, name);
         return cheapestBrand;
     }
 
     @Override
-    public List<String> getIdsThatLackSpecificIngredient(String ingredient, OutputFormat outputFormat) {
+    public List<String> getIdsThatLackSpecificIngredient(String ingredient, OutputFormat outputFormat, String name) {
         List<String> idsWithoutSpecificIngredient = beerRepo.getIdsThatLackSpecificIngredientDb(ingredient)
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
         String nameOfTheTask = "get_ids_that_lack_from_specific_ingredient";
-        convertToJson(idsWithoutSpecificIngredient, 4, outputFormat, nameOfTheTask);
+        convertToJson(idsWithoutSpecificIngredient, 4, outputFormat, nameOfTheTask, name);
         return idsWithoutSpecificIngredient;
     }
 
     @Override
-    public List<String> sortAllBeersByRemainingIngredientRatio(OutputFormat outputFormat) {
+    public List<String> sortAllBeersByRemainingIngredientRatio(OutputFormat outputFormat, String name) {
         List<String> result = beerRepo.sortAllBeersByRemainingIngredientRatioDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list")).stream()
                 .collect(Collectors.toMap(BeerIdWithIngredientRatio::getId, BeerIdWithIngredientRatio::getRatio, Double::sum))
@@ -91,12 +92,12 @@ public class BeerServiceImplementation implements BeerService {
                 .map(k -> k.getKey())
                 .collect(Collectors.toList());
         String nameOfTheTask = "sort_all_beers_by_remaining_ingredient_ratio";
-        convertToJson(result, 5, outputFormat, nameOfTheTask);
+        convertToJson(result, 5, outputFormat, nameOfTheTask, name);
         return result;
     }
 
     @Override
-    public Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(OutputFormat outputFormat) {
+    public Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(OutputFormat outputFormat, String name) {
         List<BeerAndPrice> beersAndPrices = new ArrayList<>(beerRepo.listBeersBasedOnTheirPriceWithATipDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list")));
 
@@ -107,15 +108,20 @@ public class BeerServiceImplementation implements BeerService {
             tempBeers.add(bap.getBeer());
         }
         String nameOfTheTask = "list_beers_based_on_their_price_with_a_tip";
-        convertToJson(beersAndRoundedPrices, 6, outputFormat, nameOfTheTask);
+        convertToJson(beersAndRoundedPrices, 6, outputFormat, nameOfTheTask, name);
         return beersAndRoundedPrices;
     }
 
-    private Integer roundPrice(int price) {
+    @Override
+    public void updatePrice(){
+        beerRepo.updatePrice();
+    }
+
+    public Integer roundPrice(int price) {
         return ((price + 99) / 100) * 100;
     }
 
-    public String convertToJson(Object o, int taskNumber, OutputFormat outputFormat, String nameOfTheTask) {
+    public String convertToJson(Object o, int taskNumber, OutputFormat outputFormat, String nameOfTheTask, String name) {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
         String result;
@@ -124,7 +130,15 @@ public class BeerServiceImplementation implements BeerService {
             if (outputFormat.getNumber() == 1) {
                 System.out.println(result);
             } else if (outputFormat.getNumber() == 2) {
-                objectMapper.writeValue(new File(taskNumber + ". " + nameOfTheTask + ".json"), o);
+                objectMapper.writeValue(new File(new StringBuilder()
+                        .append(taskNumber)
+                        .append(". ")
+                        .append(nameOfTheTask)
+                        .append("_")
+                        .append(name)
+                        .append(".json")
+                        .toString())
+                        , o);
             }
             return result;
         } catch (IOException ioe) {

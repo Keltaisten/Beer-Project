@@ -6,7 +6,6 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mariadb.jdbc.MariaDbDataSource;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,64 +73,88 @@ class BeerRepoImplementationTest {
                         new Ingredient("barley", 0.013),
                         new Ingredient("wheat", 0),
                         new Ingredient("corn", 0)));
+        Beer beer5 = new Beer("spa-1", "Beer Sans Corn", "Beer Sans Brewery",
+                "Corn", 910, 0.129,
+                Arrays.asList(
+                        new Ingredient("salt", 0.004),
+                        new Ingredient("sugar", 0.027),
+                        new Ingredient("barley", 0),
+                        new Ingredient("wheat", 0),
+                        new Ingredient("corn", 0.221)));
         beers.add(beer1);
         beers.add(beer2);
         beers.add(beer3);
         beers.add(beer4);
+        beers.add(beer5);
+        beerRepository.saveBeers(beers);
     }
 
     @Test
     void saveBeers() {
-        beerRepository.saveBeers(beers);
         assertEquals("Share White",beerRepository.findByIdInBeers("sw-1"));
     }
 
     @Test
     void saveIngredients() {
         beerRepository.saveIngredients(beers.get(0));
-//        beerRepository.saveBeers(beers);
-//        System.out.println(beerRepository.findByIdInIngredients(1));
         assertEquals(0.002,beerRepository.findByIdInIngredients(1));
-//        assertEquals();
     }
 
     @Test
     void filterBeersByBeerTypeDb() {
-
+        assertEquals(2,beerRepository.filterBeersByBeerTypeDb("White").get().size());
     }
 
     @Test
     void getIdsThatLackSpecificIngredientDb() {
+        assertEquals("spa-1",beerRepository.getIdsThatLackSpecificIngredientDb("barley").get().get(0));
     }
 
     @Test
     void getTheCheapestBrandDb() {
+        assertEquals("Coding Challenge Brewery",beerRepository.getBeersAndPricesForTheCheapestBrandDb().get().get(0).getBeer());
+        assertEquals(4645,beerRepository.getBeersAndPricesForTheCheapestBrandDb().get().get(0).getPrice());
     }
 
     @Test
     void sortAllBeersByRemainingIngredientRatioDb() {
+        assertEquals(25,beerRepository.getBeerIdsWithIngrRatioForsortAllBeersByRemainingIngredientRatioDb().get().size());
+        assertEquals("ccw-1",beerRepository.getBeerIdsWithIngrRatioForsortAllBeersByRemainingIngredientRatioDb().get().get(2).getId());
+        assertEquals(0.025,beerRepository.getBeerIdsWithIngrRatioForsortAllBeersByRemainingIngredientRatioDb().get().get(2).getRatio());
     }
 
     @Test
     void groupBeersByBrandDb() {
+        assertEquals(5,beerRepository.groupBeersByBrandDb().size());
+        assertEquals("Share",beerRepository.groupBeersByBrandDb().get(4).getBrand());
+        assertEquals(Arrays.asList("sw-1","spa-1"),beerRepository.groupBeersByBrandDb().get(4).getBeers());
     }
 
     @Test
     void listBeersBasedOnTheirPriceWithATipDb() {
+        assertEquals(5,beerRepository.listBeersWithPriceForTipCalculationDb().get().size());
+        assertEquals("ccw-1",beerRepository.listBeersWithPriceForTipCalculationDb().get().get(0).getBeer());
+        assertEquals(4645,beerRepository.listBeersWithPriceForTipCalculationDb().get().get(0).getPrice());
     }
 
     @Test
     void updatePriceTest(){
-        beerRepository.saveBeers(beers);
         beerRepository.updatePrice();
         assertEquals(3600,beerRepository.findBeerByIdInBeers("lupa-1").getPrice());
-//        EmptyResultDataAccessException emptyResultDataAccessException = assertThrows(EmptyResultDataAccessException.class,
-//                ()->beerRepository.findBeerByIdInBeers("xyz"));
-//        assertEquals("Incorrect result size: expected 1, actual 0",emptyResultDataAccessException.getMessage());
-
         IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
                 ()->beerRepository.findBeerByIdInBeers("xyz"));
         assertEquals("No beer on this id: xyz",iae.getMessage());
+    }
+
+    @Test
+    void findByIdInIngredientsSumTest(){
+        assertEquals(0.055,beerRepository.findByIdInIngredientsSum("ccw-1"),0.0001);
+    }
+
+    @Test
+    void deleteBeerByIdDbTest(){
+        assertTrue(beerRepository.deleteBeerByIdDb("sw-1"));
+        assertFalse(beerRepository.deleteBeerByIdDb("NotAnId"));
     }
 
 }

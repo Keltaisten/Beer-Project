@@ -6,7 +6,6 @@ import beercatalog.BrandsWithBeers;
 import beercatalog.BeerAndPrice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import controller.Application;
 import controller.enums.OutputFormat;
 import repository.BeerRepo;
 import repository.BeerRepoImplementation;
@@ -60,7 +59,7 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public String getTheCheapestBrand(OutputFormat outputFormat, String name) {
-        List<BeerAndPrice> brandsWithPrices = beerRepo.getTheCheapestBrandDb()
+        List<BeerAndPrice> brandsWithPrices = beerRepo.getBeersAndPricesForTheCheapestBrandDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
 
         String cheapestBrand = brandsWithPrices.stream()
@@ -84,7 +83,7 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public List<String> sortAllBeersByRemainingIngredientRatio(OutputFormat outputFormat, String name) {
-        List<String> result = beerRepo.sortAllBeersByRemainingIngredientRatioDb()
+        List<String> result = beerRepo.getBeerIdsWithIngrRatioForsortAllBeersByRemainingIngredientRatioDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list")).stream()
                 .collect(Collectors.toMap(BeerIdWithIngredientRatio::getId, BeerIdWithIngredientRatio::getRatio, Double::sum))
                 .entrySet().stream()
@@ -98,7 +97,7 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(OutputFormat outputFormat, String name) {
-        List<BeerAndPrice> beersAndPrices = new ArrayList<>(beerRepo.listBeersBasedOnTheirPriceWithATipDb()
+        List<BeerAndPrice> beersAndPrices = new ArrayList<>(beerRepo.listBeersWithPriceForTipCalculationDb()
                 .orElseThrow(() -> new IllegalArgumentException("No data in the list")));
 
         Map<Integer, List<String>> beersAndRoundedPrices = new TreeMap<>();
@@ -115,6 +114,11 @@ public class BeerServiceImplementation implements BeerService {
     @Override
     public void updatePrice(){
         beerRepo.updatePrice();
+    }
+
+    @Override
+    public boolean deleteBeerById(String number) {
+        return beerRepo.deleteBeerByIdDb(number);
     }
 
     public Integer roundPrice(int price) {
@@ -158,4 +162,7 @@ public class BeerServiceImplementation implements BeerService {
         return brandsWithBeers;
     }
 
+    public BeerRepo getBeerRepo() {
+        return beerRepo;
+    }
 }

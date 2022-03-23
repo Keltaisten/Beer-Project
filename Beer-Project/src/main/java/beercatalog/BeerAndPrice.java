@@ -25,6 +25,15 @@ public class BeerAndPrice {
 //        averagePrice =  ((double) price / numberOfBeersByBrand);
 //    }
 
+
+    @Override
+    public String toString() {
+        return "BeerAndPrice{" +
+                "beer='" + beer + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
     public String getBeer() {
         return beer;
     }

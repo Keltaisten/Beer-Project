@@ -16,4 +16,12 @@ public class BeerIdWithIngredientRatio {
     public double getRatio() {
         return ratio;
     }
+
+    @Override
+    public String toString() {
+        return "BeerIdWithIngredientRatio{" +
+                "id='" + id + '\'' +
+                ", ratio=" + ratio +
+                '}';
+    }
 }

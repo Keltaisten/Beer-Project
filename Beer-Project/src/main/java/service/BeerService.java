@@ -15,6 +15,7 @@ public interface BeerService {
     Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(OutputFormat outputFormat, String name);
     void saveDataToDb();
     void updatePrice();
+    boolean deleteBeerById(String number);
     Integer roundPrice(int price);
     String convertToJson(Object o, int taskNumber, OutputFormat outputFormat, String nameOfTheTask, String name);
 }

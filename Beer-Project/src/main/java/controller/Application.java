@@ -44,7 +44,7 @@ public class Application {
     }
 
     private OutputFormat selectOutputFormat() {
-        System.out.println("\nSelect output format:\n1. Console\n2. Write to Json file\n3. Write to database");
+        System.out.println("\nSelect output format:\n1. Console\n2. Write to Json file");
         String line;
         int step;
         List<Integer> outputFormatNumbers = Arrays.stream(OutputFormat.values()).map(OutputFormat::getNumber).toList();
@@ -96,12 +96,30 @@ public class Application {
                     beerManager.updatePrice();
                     break;
                 case 8:
-                    selectOutputFormat();
+                    String beerId = askForBeerId();
+                    isBeerDeleted(beerManager.deleteBeerById(beerId));
                     break;
                 case 9:
-//                    selectOutputFormat();
+                    selectOutputFormat();
             }
         } while (step != 0);
+    }
+
+    private void isBeerDeleted(boolean deleteBeerById) {
+        if(deleteBeerById){
+            System.out.println("Beer is deleted");
+        }
+        else {
+            System.out.println("No beer with that id");
+        }
+    }
+
+    private String askForBeerId() {
+        System.out.println("Please add a beer id.");
+        String line;
+        while (!validator.validateInput(line = scanner.nextLine())){
+        }
+        return line;
     }
 
     private void serviceMessage() {

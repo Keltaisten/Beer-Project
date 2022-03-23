@@ -34,6 +34,8 @@ public class BrandsWithBeers {
         return beers;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -13,15 +13,6 @@ public class Beer {
     private List<Ingredient> ingredients = new ArrayList<>();
     private double waterIngredient;
 
-//    public boolean checkIfIngredientNotInclude(String ingredient) {
-//        for (Ingredient actual : ingredients) {
-//            if (actual.getName().equals(ingredient) && actual.getRatio() == 0) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     public Beer() {
     }
 
@@ -36,11 +27,11 @@ public class Beer {
         setWaterIngredient();
     }
 
-    public void addIngredient(Ingredient ingredient){
+    public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
     }
 
-    public void addIngredients(List<Ingredient> ingredients){
+    public void addIngredients(List<Ingredient> ingredients) {
         ingredients.addAll(ingredients);
     }
 

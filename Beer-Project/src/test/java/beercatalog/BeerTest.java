@@ -17,37 +17,28 @@ class BeerTest {
                     new Ingredient("wheat", 0.014),
                     new Ingredient("corn", 0)));
 
-//    @BeforeEach
-//    void init() {
-//
-//    }
-
-
-//    @Test
-//    void checkIfIngredientNotInclude() {
-//    }
-//
-//    @Test
-//    void addIngredient() {
-//    }
-
     @Test
-    void getName() {
+    void getNameTest() {
         assertEquals("Coding Challenge White",beer1.getName());
     }
 
     @Test
-    void getBrand() {
+    void getBrandTest() {
         assertEquals("Coding Challenge Brewery",beer1.getBrand());
     }
 
     @Test
-    void getType() {
+    void getTypeTest() {
         assertEquals("White",beer1.getType());
     }
 
     @Test
-    void getPrice() {
+    void getPriceTest() {
         assertEquals(4645,beer1.getPrice());
+    }
+
+    @Test
+    void getAlcoholTest() {
+        assertEquals(0.119,beer1.getAlcohol());
     }
 }

@@ -7,6 +7,6 @@ public interface Validator {
     boolean validateNumbers(String nextLine, List<Integer> numbers);
     boolean validateType(String nextLine);
     boolean validateIngredient(String nextLine);
-    //    boolean validateInput(String nextLine, List<String> parameter);
+    boolean validateInput(String nextLine);
     boolean validateFillingDataBaseInput(String nextLine);
 }

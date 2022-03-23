@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileManagerImplementationTest {
+class FileServiceImplementationTest {
     FileServiceImplementation fmi = new FileServiceImplementation();
 
     @Test

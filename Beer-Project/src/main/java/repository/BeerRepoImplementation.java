@@ -69,13 +69,13 @@ public class BeerRepoImplementation implements BeerRepo {
     }
 
     @Override
-    public Optional<List<BeerAndPrice>> getTheCheapestBrandDb() {
+    public Optional<List<BeerAndPrice>> getBeersAndPricesForTheCheapestBrandDb() {
         return Optional.of(jdbcTemplate.query("select * from beers;",
                 (rs, rowNum) -> new BeerAndPrice(rs.getString("brand"), rs.getInt("price"))));
     }
 
     @Override
-    public Optional<List<BeerIdWithIngredientRatio>> sortAllBeersByRemainingIngredientRatioDb() {
+    public Optional<List<BeerIdWithIngredientRatio>> getBeerIdsWithIngrRatioForsortAllBeersByRemainingIngredientRatioDb() {
         return Optional.of(jdbcTemplate.query("select * from ingredients;",
                 (rs, rowNum) -> new BeerIdWithIngredientRatio(rs.getString("beer_id"), rs.getDouble("ratio"))));
     }
@@ -91,7 +91,7 @@ public class BeerRepoImplementation implements BeerRepo {
     }
 
     @Override
-    public Optional<List<BeerAndPrice>> listBeersBasedOnTheirPriceWithATipDb() {
+    public Optional<List<BeerAndPrice>> listBeersWithPriceForTipCalculationDb() {
         return Optional.of(jdbcTemplate.query("select * from beers;",
                 (rs, rowNum) -> new BeerAndPrice(rs.getString("beer_id"), rs.getInt("price"))));
     }
@@ -108,7 +108,7 @@ public class BeerRepoImplementation implements BeerRepo {
         return jdbcTemplate.queryForObject(
                 "select * from beers where beer_id = ?;",
                 (rs, rowNum) ->
-                        rs.getString("ratio"),
+                        rs.getString("beer_name"),
                 id);
     }
 
@@ -122,9 +122,9 @@ public class BeerRepoImplementation implements BeerRepo {
 
     public Double findByIdInIngredientsSum(String id) {
         return jdbcTemplate.queryForObject(
-                "SELECT SUM() from ingredients where beer_id = ?;",
+                "SELECT SUM(ratio) from ingredients where beer_id = ?;",
                 (rs, rowNum) ->
-                        rs.getDouble("ratio"),
+                        rs.getDouble("SUM(ratio)"),
                 id);
     }
 
@@ -142,22 +142,34 @@ public class BeerRepoImplementation implements BeerRepo {
         return prices;
     }
 
+    @Override
+    public boolean deleteBeerByIdDb(String beerId) {
+        if (isABeerByIdInBeers(beerId)) {
+            jdbcTemplate.update("delete from beers where beer_id = ?;", beerId);
+            jdbcTemplate.update("delete from ingredients where beer_id = ?;", beerId);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public Beer findBeerByIdInBeers(String id) {
         Beer beer;
         try {
-        beer = jdbcTemplate.queryForObject(
-                "select * from beers where beer_id = ?;",
-                (rs, rowNum) ->
-                        new Beer(rs.getString("beer_id"),
-                                rs.getString("beer_name"),
-                                rs.getString("brand"),
-                                rs.getString("beer_type"),
-                                rs.getInt("price"),
-                                rs.getDouble("alcohol"),
-                                new ArrayList<>()),
-                id);
-        }catch (EmptyResultDataAccessException erdae){
-            throw new IllegalArgumentException("No beer on this id: " + id,erdae);
+            beer = jdbcTemplate.queryForObject(
+                    "select * from beers where beer_id = ?;",
+                    (rs, rowNum) ->
+                            new Beer(rs.getString("beer_id"),
+                                    rs.getString("beer_name"),
+                                    rs.getString("brand"),
+                                    rs.getString("beer_type"),
+                                    rs.getInt("price"),
+                                    rs.getDouble("alcohol"),
+                                    new ArrayList<>()),
+                    id);
+        } catch (EmptyResultDataAccessException erdae) {
+            throw new IllegalArgumentException("No beer on this id: " + id, erdae);
         }
         if (beer != null) {
             beer.addIngredients(findIngredientsById(id));
@@ -175,5 +187,18 @@ public class BeerRepoImplementation implements BeerRepo {
                         new Ingredient(rs.getString("ingredient_name"),
                                 rs.getDouble("ratio")),
                 id);
+    }
+
+    public boolean isABeerByIdInBeers(String id) {
+        try {
+            String number = jdbcTemplate.queryForObject(
+                    "select * from beers where beer_id = ?;",
+                    (rs, rowNum) ->
+                            rs.getString("beer_id"),
+                    id);
+        } catch (EmptyResultDataAccessException erdae) {
+            return false;
+        }
+        return true;
     }
 }

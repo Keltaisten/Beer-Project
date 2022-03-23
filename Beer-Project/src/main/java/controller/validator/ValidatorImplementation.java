@@ -7,10 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ValidatorImplementation implements Validator {
-//    public static final List<String> TYPES = Arrays.asList("brown", "corn", "pale ale", "wheat", "white");
-//    public static final List<String> INGREDIENTS = Arrays.asList("barley", "corn", "salt", "sugar", "wheat");
-//    private static final String OUTPUT_FORMAT_NUMBERS = "12";
-//    private static final String SERVICE_FORMAT_NUMBERS = "12345678";
 
     @Override
     public boolean validateName(String nextLine) {
@@ -26,7 +22,7 @@ public class ValidatorImplementation implements Validator {
     public boolean validateNumbers(String nextLine, List<Integer> numbers) {
         String line;
         if (nextLine == null || nextLine.trim().equals("")) {
-            System.out.println("Given parameter is not ok");
+            System.out.println("No given parameter");
             return false;
         }
         line = nextLine.trim();
@@ -71,37 +67,14 @@ public class ValidatorImplementation implements Validator {
         }
     }
 
-//    @Override
-//    public boolean validateInput(String nextLine, Types parameter) {
-//        if (nextLine == null || nextLine.trim().equals("")) {
-//            System.out.println("No given parameter");
-//            return true;
-//        } else if(checkParameter(nextLine,parameter)){
-//            return false;
-//        }
-//        else {
-//            System.out.println(nextLine + " is not included. Select from the list.");
-//            return true;
-//        }
-//    }
-//
-//    private boolean checkParameter(String nextLine, Types parameter) {
-//        for(String s : parameter.getName())
-//    }
-
-//    @Override
-//    public boolean validateInput(String nextLine, List<String> parameter) {
-//        if (nextLine == null || nextLine.trim().equals("")) {
-//            System.out.println("No given parameter");
-//            return true;
-//        } else if(parameter.contains(nextLine)){
-//            return false;
-//        }
-//        else {
-//            System.out.println(nextLine + " is not included. Select from the list.");
-//            return true;
-//        }
-//    }
+    @Override
+    public boolean validateInput(String nextLine) {
+        if (nextLine == null || nextLine.trim().equals("")) {
+            System.out.println("No given parameter");
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public boolean validateFillingDataBaseInput(String nextLine) {

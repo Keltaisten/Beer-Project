@@ -104,7 +104,8 @@ public class BeerRepoImplementation implements BeerRepo {
                 id);
     }
 
-    public String findByIdInBeers(String id) {
+    @Override
+    public String findBeerNameByIdInBeers(String id) {
         return jdbcTemplate.queryForObject(
                 "select * from beers where beer_id = ?;",
                 (rs, rowNum) ->
@@ -112,7 +113,8 @@ public class BeerRepoImplementation implements BeerRepo {
                 id);
     }
 
-    public Double findByIdInIngredients(long id) {
+    @Override
+    public Double findRatioByIdInIngredients(long id) {
         return jdbcTemplate.queryForObject(
                 "select * from ingredients where id = ?;",
                 (rs, rowNum) ->
@@ -120,7 +122,8 @@ public class BeerRepoImplementation implements BeerRepo {
                 id);
     }
 
-    public Double findByIdInIngredientsSum(String id) {
+    @Override
+    public Double getRatioSumByIdInIngredients(String id) {
         return jdbcTemplate.queryForObject(
                 "SELECT SUM(ratio) from ingredients where beer_id = ?;",
                 (rs, rowNum) ->
@@ -128,18 +131,21 @@ public class BeerRepoImplementation implements BeerRepo {
                 id);
     }
 
+    @Override
     @Transactional
-    public List<BeerAndPrice> updatePrice() {
+    public List<BeerAndPrice> selectAndUpdatePrice() {
         List<BeerAndPrice> prices = jdbcTemplate.query("select * from beers;",
                 (rs, rowNum) -> new BeerAndPrice(rs.getString("beer_id"),
                         new BeerServiceImplementation().roundPrice(rs.getInt("price"))));
-//                .stream().map(k -> new BeerServiceImplementation().roundPrice(k.getPrice()))
-//                .toList();
+        updatePrice(prices);
+        return prices;
+    }
+
+    private void updatePrice(List<BeerAndPrice> prices) {
         for (int i = 0; i < prices.size(); i++) {
             jdbcTemplate.update("update beers set price = ? where beer_id = ?;",
                     prices.get(i).getPrice(), prices.get(i).getBeer());
         }
-        return prices;
     }
 
     @Override
@@ -148,12 +154,12 @@ public class BeerRepoImplementation implements BeerRepo {
             jdbcTemplate.update("delete from beers where beer_id = ?;", beerId);
             jdbcTemplate.update("delete from ingredients where beer_id = ?;", beerId);
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
+    @Override
     public Beer findBeerByIdInBeers(String id) {
         Beer beer;
         try {
@@ -174,12 +180,10 @@ public class BeerRepoImplementation implements BeerRepo {
         if (beer != null) {
             beer.addIngredients(findIngredientsById(id));
         }
-//        else {
-//            throw new IllegalArgumentException("No beer on this id: " + id);
-//        }
         return beer;
     }
 
+    @Override
     public List<Ingredient> findIngredientsById(String id) {
         return jdbcTemplate.query(
                 "select * from ingredients where beer_id = ?;",
@@ -189,6 +193,7 @@ public class BeerRepoImplementation implements BeerRepo {
                 id);
     }
 
+    @Override
     public boolean isABeerByIdInBeers(String id) {
         try {
             String number = jdbcTemplate.queryForObject(

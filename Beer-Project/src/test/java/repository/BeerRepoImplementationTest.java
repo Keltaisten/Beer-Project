@@ -91,13 +91,13 @@ class BeerRepoImplementationTest {
 
     @Test
     void saveBeers() {
-        assertEquals("Share White",beerRepository.findByIdInBeers("sw-1"));
+        assertEquals("Share White",beerRepository.findBeerNameByIdInBeers("sw-1"));
     }
 
     @Test
     void saveIngredients() {
         beerRepository.saveIngredients(beers.get(0));
-        assertEquals(0.002,beerRepository.findByIdInIngredients(1));
+        assertEquals(0.002,beerRepository.findRatioByIdInIngredients(1));
     }
 
     @Test
@@ -139,7 +139,7 @@ class BeerRepoImplementationTest {
 
     @Test
     void updatePriceTest(){
-        beerRepository.updatePrice();
+        beerRepository.selectAndUpdatePrice();
         assertEquals(3600,beerRepository.findBeerByIdInBeers("lupa-1").getPrice());
         IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
                 ()->beerRepository.findBeerByIdInBeers("xyz"));
@@ -148,7 +148,7 @@ class BeerRepoImplementationTest {
 
     @Test
     void findByIdInIngredientsSumTest(){
-        assertEquals(0.055,beerRepository.findByIdInIngredientsSum("ccw-1"),0.0001);
+        assertEquals(0.055,beerRepository.getRatioSumByIdInIngredients("ccw-1"),0.0001);
     }
 
     @Test

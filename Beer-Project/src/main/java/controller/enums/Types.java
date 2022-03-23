@@ -1,7 +1,8 @@
 package controller.enums;
 
 public enum Types {
-    BROWN("brown"),CORN("corn"),PALE_ALE("pale ale"), WHEAT("wheat"),WHITE("white");
+    BROWN("brown"), CORN("corn"), PALE_ALE("pale ale"),
+    WHEAT("wheat"), WHITE("white");
 
     private final String name;
 

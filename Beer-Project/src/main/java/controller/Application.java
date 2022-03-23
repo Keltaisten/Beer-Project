@@ -12,10 +12,10 @@ import java.util.Scanner;
 
 public class Application {
 
-    public static final String PATH = "src/main/resources/demo.json";
+    private static final String PATH = "src/main/resources/demo.json";
     ValidatorImplementation validator = new ValidatorImplementation();
     Scanner scanner = new Scanner(System.in);
-//    private static String name;
+    private OutputFormat outputFormat;
 
     public static void main(String[] args) {
         Application application = new Application();
@@ -29,8 +29,8 @@ public class Application {
         while (!validator.validateName(name = scanner.nextLine())) {
         }
         fillDatabaseOrNot(beerService);
-        OutputFormat output = selectOutputFormat();
-        selectService(beerService, output, name);
+        outputFormat = selectOutputFormat();
+        selectService(beerService, name);
     }
 
     private void fillDatabaseOrNot(BeerService beerService) {
@@ -53,16 +53,14 @@ public class Application {
         step = Integer.parseInt(line);
         switch (step) {
             case 1:
-//                outputFormat = 1;
                 return OutputFormat.CONSOLE;
             case 2:
-//                outputFormat = 2;
                 return OutputFormat.JSON_FILE;
         }
         throw new IllegalStateException("Not ok input");
     }
 
-    private void selectService(BeerService beerManager, OutputFormat outputFormat, String name) {
+    private void selectService(BeerService beerService, String name) {
         int step;
         String line;
         do {
@@ -73,43 +71,42 @@ public class Application {
             step = Integer.parseInt(line);
             switch (step) {
                 case 1:
-                    beerManager.groupBeersByBrand(outputFormat, name);
+                    beerService.groupBeersByBrand(outputFormat, name);
                     break;
                 case 2:
                     String type = askForType();
-                    beerManager.filterBeersByBeerType(type, outputFormat, name);
+                    beerService.filterBeersByBeerType(type, outputFormat, name);
                     break;
                 case 3:
-                    beerManager.getTheCheapestBrand(outputFormat, name);
+                    beerService.getTheCheapestBrand(outputFormat, name);
                     break;
                 case 4:
                     String ingredient = askForIngredient();
-                    beerManager.getIdsThatLackSpecificIngredient(ingredient, outputFormat, name);
+                    beerService.getIdsThatLackSpecificIngredient(ingredient, outputFormat, name);
                     break;
                 case 5:
-                    beerManager.sortAllBeersByRemainingIngredientRatio(outputFormat, name);
+                    beerService.sortAllBeersByRemainingIngredientRatio(outputFormat, name);
                     break;
                 case 6:
-                    beerManager.listBeersBasedOnTheirPriceWithATip(outputFormat, name);
+                    beerService.listBeersBasedOnTheirPriceWithATip(outputFormat, name);
                     break;
                 case 7:
-                    beerManager.updatePrice();
+                    beerService.updatePrice();
                     break;
                 case 8:
                     String beerId = askForBeerId();
-                    isBeerDeleted(beerManager.deleteBeerById(beerId));
+                    isBeerDeleted(beerService.deleteBeerById(beerId));
                     break;
                 case 9:
-                    selectOutputFormat();
+                    outputFormat = selectOutputFormat();
             }
         } while (step != 0);
     }
 
     private void isBeerDeleted(boolean deleteBeerById) {
-        if(deleteBeerById){
+        if (deleteBeerById) {
             System.out.println("Beer is deleted");
-        }
-        else {
+        } else {
             System.out.println("No beer with that id");
         }
     }
@@ -117,7 +114,7 @@ public class Application {
     private String askForBeerId() {
         System.out.println("Please add a beer id.");
         String line;
-        while (!validator.validateInput(line = scanner.nextLine())){
+        while (!validator.validateInput(line = scanner.nextLine())) {
         }
         return line;
     }
@@ -160,5 +157,9 @@ public class Application {
         while (!validator.validateType(line = scanner.nextLine().toLowerCase())) {
         }
         return line;
+    }
+
+    public void writeServiceResultToConsole(String result) {
+        System.out.println(result);
     }
 }

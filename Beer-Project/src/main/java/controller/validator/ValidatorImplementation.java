@@ -44,10 +44,9 @@ public class ValidatorImplementation implements Validator {
         if (nextLine == null || nextLine.trim().equals("")) {
             System.out.println("No given type");
             return false;
-        } else if(Arrays.stream(Types.values()).map(Types::getName).toList().contains(nextLine)){
+        } else if (Arrays.stream(Types.values()).map(Types::getName).toList().contains(nextLine)) {
             return true;
-        }
-        else {
+        } else {
             System.out.println(nextLine + " is not included. Select from the list.");
             return false;
         }
@@ -58,10 +57,9 @@ public class ValidatorImplementation implements Validator {
         if (nextLine == null || nextLine.trim().equals("")) {
             System.out.println("No given parameter");
             return false;
-        } else if(Arrays.stream(Ingredients.values()).map(Ingredients::getName).toList().contains(nextLine)){
+        } else if (Arrays.stream(Ingredients.values()).map(Ingredients::getName).toList().contains(nextLine)) {
             return true;
-        }
-        else {
+        } else {
             System.out.println(nextLine + " is not included. Select from the list.");
             return false;
         }
@@ -82,10 +80,9 @@ public class ValidatorImplementation implements Validator {
         if (nextLine == null || nextLine.trim().equals("")) {
             System.out.println("No given parameter");
             return false;
-        } else if("yes".equals(line) || "no".equals(line)){
+        } else if ("yes".equals(line) || "no".equals(line)) {
             return true;
-        }
-        else {
+        } else {
             System.out.println("Given parameter is not ok: " + nextLine);
             return false;
         }

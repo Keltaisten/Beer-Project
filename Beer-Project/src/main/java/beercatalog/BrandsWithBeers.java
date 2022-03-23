@@ -7,14 +7,15 @@ public class BrandsWithBeers {
     private String brand;
     private List<String> beers;
 
-    public BrandsWithBeers() {}
+    public BrandsWithBeers() {
+    }
 
     public BrandsWithBeers(String brand, List<String> beers) {
         this.brand = brand;
         this.beers = beers;
     }
 
-    public void addBeer(String beer){
+    public void addBeer(String beer) {
         beers.add(beer);
     }
 
@@ -33,8 +34,6 @@ public class BrandsWithBeers {
     public List<String> getBeers() {
         return beers;
     }
-
-
 
     @Override
     public boolean equals(Object o) {

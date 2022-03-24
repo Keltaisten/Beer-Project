@@ -10,7 +10,8 @@ The user can get several information about the Beer data like:
  - List beers based on their price with a tip
  - Round all price to hundred
  - Delete beer by beer id
-The information get be write to the console or write to JSON file.
+
+The information can be write to the console or to JSON file.
 
 I made the project in Java SE program language.
 I used IDEA for development environment and Maven for build.

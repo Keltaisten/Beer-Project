@@ -8,6 +8,8 @@ The user can get several information about the Beer data like:
  - Get ids that lack from specific ingredient
  - Sort all beers by remaining ingredient ratio
  - List beers based on their price with a tip
+
+The user also can update or delete datas in database:
  - Round all price to hundred
  - Delete beer by beer id
 

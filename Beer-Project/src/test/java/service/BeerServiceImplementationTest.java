@@ -19,21 +19,27 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BeerServiceImplementationTest {
-    BeerServiceImplementation beerServiceImpl = new BeerServiceImplementation();
-    BeerRepoImplementation beerRepository = new BeerRepoImplementation();
+    private static final String PATH = "src/main/resources/demo.json";
+    BeerServiceImplementation beerServiceImpl;
+//    BeerServiceImplementation beerServiceImpl = new BeerServiceImplementation();
+    BeerRepoImplementation beerRepository;
+//    BeerRepoImplementation beerRepository = new BeerRepoImplementation();
     List<Beer> beers = new ArrayList<>();
 
     @BeforeEach
     void initTest() {
+        MariaDbDataSource dataSource = new MariaDbDataSource();
         Properties prop = new Properties();
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(BeerRepoImplementation.class.getResourceAsStream("/beerstore.properties")))) {
             prop.load(br);
-            MariaDbDataSource dataSource = new MariaDbDataSource();
+//            MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));
             dataSource.setUser(prop.getProperty("user"));
             dataSource.setPassword(prop.getProperty("password"));
-            beerRepository.init();
+            beerRepository = new BeerRepoImplementation(dataSource);
+            beerServiceImpl = new BeerServiceImplementation(beerRepository,PATH);
+//            beerRepository.init();
             Flyway fw = Flyway.configure().dataSource(dataSource).load();
             fw.clean();
             fw.migrate();

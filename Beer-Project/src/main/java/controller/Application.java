@@ -4,27 +4,67 @@ import controller.enums.OutputFormat;
 import controller.enums.Service;
 import controller.validator.Validator;
 import controller.validator.ValidatorImplementation;
+import org.flywaydb.core.Flyway;
+import org.mariadb.jdbc.MariaDbDataSource;
+import repository.BeerRepoImplementation;
 import service.BeerService;
 import service.BeerServiceImplementation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Application {
 
     private static final String PATH = "src/main/resources/demo.json";
+    private static final String PATH_PROPERTIES = "/beerstore.properties";
     Validator validator = new ValidatorImplementation();
     Scanner scanner = new Scanner(System.in);
     private OutputFormat outputFormat;
+    private MariaDbDataSource dataSource;
+    private BeerService beerService;
 
-    public static void main(String[] args) {
-        Application application = new Application();
-        BeerService beerService = new BeerServiceImplementation(PATH);
-        application.openConsole(beerService);
+    public Application(MariaDbDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    public void openConsole(BeerService beerService) {
+    public Application() {
+    }
+
+    public Application(BeerService beerService) {
+        this.beerService = beerService;
+    }
+
+//    public static void main(String[] args) {
+//        MariaDbDataSource dataSource = new MariaDbDataSource();
+//
+//        Properties prop = new Properties();
+//        try (BufferedReader br = new BufferedReader(
+//                new InputStreamReader(BeerRepoImplementation.class.getResourceAsStream(PATH_PROPERTIES)))) {
+//            prop.load(br);
+//            dataSource.setUrl(prop.getProperty("url"));
+//            dataSource.setUser(prop.getProperty("user"));
+//            dataSource.setPassword(prop.getProperty("password"));
+//        } catch (IOException | SQLException ex) {
+//            throw new IllegalStateException("Cannot reach file", ex);
+//        }
+//
+//        Flyway fw = Flyway.configure().dataSource(dataSource).load();
+//        fw.clean();
+//        fw.migrate();
+//
+//
+//        Application application = new Application(dataSource);
+//        BeerService beerService = new BeerServiceImplementation(PATH);
+//        application.openConsole(beerService);
+//    }
+
+    public void openConsole() {
         System.out.println("***********************\n   Beer Manager App\n***********************\n\nAdd your name:");
         String name;
         while (!validator.validateName(name = scanner.nextLine())) {

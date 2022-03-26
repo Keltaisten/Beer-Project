@@ -9,6 +9,14 @@ import java.io.IOException;
 import java.util.List;
 
 public class FileServiceImplementation implements FileService {
+    private BeerService beerService;
+
+    public FileServiceImplementation() {
+    }
+
+    public FileServiceImplementation(BeerService beerService) {
+        this.beerService = beerService;
+    }
 
     @Override
     public List<Beer> readJsonFile(String path) {

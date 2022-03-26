@@ -17,16 +17,28 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BeerServiceImplementation implements BeerService {
+    private static final String PATH = "src/main/resources/demo.json";
     private List<Beer> beers = new ArrayList<>();
     private FileService fileManager;
     private List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
-    private BeerRepo beerRepo = new BeerRepoImplementation();
+    private BeerRepo beerRepo;
+//    private BeerRepo beerRepo = new BeerRepoImplementation();
     private Application application = new Application();
 
     public BeerServiceImplementation() {
     }
 
-    public BeerServiceImplementation(String path) {
+//    public BeerServiceImplementation(BeerRepo beerRepo) {
+//        this.beerRepo = beerRepo;
+//    }
+
+//    public BeerServiceImplementation(String path) {
+//        fileManager = new FileServiceImplementation();
+//        beers = fileManager.readJsonFile(path);
+//    }
+
+    public BeerServiceImplementation(BeerRepo beerRepo, String path) {
+        this.beerRepo = beerRepo;
         fileManager = new FileServiceImplementation();
         beers = fileManager.readJsonFile(path);
     }

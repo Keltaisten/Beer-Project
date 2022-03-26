@@ -19,25 +19,30 @@ public class BeerRepoImplementation implements BeerRepo {
     private MariaDbDataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
-    public BeerRepoImplementation() {
-        this.dataSource = init();
+//    public BeerRepoImplementation() {
+//        this.dataSource = init();
+//        jdbcTemplate = new JdbcTemplate(dataSource);
+//    }
+
+    public BeerRepoImplementation(MariaDbDataSource dataSource) {
+        this.dataSource = dataSource;
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public MariaDbDataSource init() {
-        Properties prop = new Properties();
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(BeerRepoImplementation.class.getResourceAsStream(PATH_PROPERTIES)))) {
-            prop.load(br);
-            MariaDbDataSource dataSource = new MariaDbDataSource();
-            dataSource.setUrl(prop.getProperty("url"));
-            dataSource.setUser(prop.getProperty("user"));
-            dataSource.setPassword(prop.getProperty("password"));
-            return dataSource;
-        } catch (IOException | SQLException ex) {
-            throw new IllegalStateException("Cannot reach file", ex);
-        }
-    }
+//    public MariaDbDataSource init() {
+//        Properties prop = new Properties();
+//        try (BufferedReader br = new BufferedReader(
+//                new InputStreamReader(BeerRepoImplementation.class.getResourceAsStream(PATH_PROPERTIES)))) {
+//            prop.load(br);
+//            MariaDbDataSource dataSource = new MariaDbDataSource();
+//            dataSource.setUrl(prop.getProperty("url"));
+//            dataSource.setUser(prop.getProperty("user"));
+//            dataSource.setPassword(prop.getProperty("password"));
+//            return dataSource;
+//        } catch (IOException | SQLException ex) {
+//            throw new IllegalStateException("Cannot reach file", ex);
+//        }
+//    }
 
     @Override
     public void saveBeers(List<Beer> beers) {

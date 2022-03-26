@@ -21,3 +21,4 @@ I used MariaDb and JDBCTemplate on the repository level for making connection wi
 I also used HeidiSQL for checking datas.
 I made JUnit and integrated tests.
 I took Jackson to read and write JSON files.
+![java2](https://user-images.githubusercontent.com/88803342/160257407-08c7030f-47c5-4898-9f3d-b392daecc11b.png)

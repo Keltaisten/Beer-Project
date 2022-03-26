@@ -2,6 +2,7 @@ package controller;
 
 import controller.enums.OutputFormat;
 import controller.enums.Service;
+import controller.validator.Validator;
 import controller.validator.ValidatorImplementation;
 import service.BeerService;
 import service.BeerServiceImplementation;
@@ -13,7 +14,7 @@ import java.util.Scanner;
 public class Application {
 
     private static final String PATH = "src/main/resources/demo.json";
-    ValidatorImplementation validator = new ValidatorImplementation();
+    Validator validator = new ValidatorImplementation();
     Scanner scanner = new Scanner(System.in);
     private OutputFormat outputFormat;
 

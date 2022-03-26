@@ -135,9 +135,9 @@ public class BeerServiceImplementation implements BeerService {
         String result;
         try {
             result = objectMapper.writeValueAsString(o);
-            if (outputFormat.getNumber() == 1) {
+            if (outputFormat == OutputFormat.CONSOLE) {
                 application.writeServiceResultToConsole(result);
-            } else if (outputFormat.getNumber() == 2) {
+            } else if (outputFormat == OutputFormat.JSON_FILE) {
                 objectMapper.writeValue(new File(new StringBuilder()
                                 .append(taskNumber)
                                 .append(". ")

@@ -122,7 +122,7 @@ class BeerServiceImplementationTest {
     @Test
     void getIdsThatLackSpecificIngredient() {
         beerServiceImpl.getBeerRepo().saveBeers(beerServiceImpl.getBeers());
-        assertEquals(Arrays.asList("lupa-1", "spa-1"), beerServiceImpl.getIdsThatLackSpecificIngredient("wheat", OutputFormat.JSON_FILE, "John"));
+        assertEquals(Arrays.asList("lupa-1", "spa-1"), beerServiceImpl.getIdsThatLackSpecificIngredient("wheat", OutputFormat.CONSOLE, "John"));
         assertEquals(0, beerServiceImpl.getIdsThatLackSpecificIngredient("sugar", OutputFormat.CONSOLE, "John").size());
     }
 

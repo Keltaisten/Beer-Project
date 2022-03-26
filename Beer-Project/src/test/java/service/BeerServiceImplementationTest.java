@@ -39,6 +39,7 @@ class BeerServiceImplementationTest {
             dataSource.setPassword(prop.getProperty("password"));
             beerRepository = new BeerRepoImplementation(dataSource);
             beerServiceImpl = new BeerServiceImplementation(beerRepository,PATH);
+            beerServiceImpl.getBeers().clear();
 //            beerRepository.init();
             Flyway fw = Flyway.configure().dataSource(dataSource).load();
             fw.clean();

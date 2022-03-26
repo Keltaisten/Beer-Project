@@ -31,14 +31,17 @@ public class BeerServiceImplementation implements BeerService {
         beers = fileManager.readJsonFile(path);
     }
 
+    @Override
     public void saveDataToDb() {
         beerRepo.saveBeers(beers);
     }
 
+    @Override
     public void addBeer(Beer beer) {
         beers.add(beer);
     }
 
+    @Override
     public void addBrandsWithBeers(BrandsWithBeers bwb) {
         brandsWithBeers.add(bwb);
     }
@@ -126,10 +129,12 @@ public class BeerServiceImplementation implements BeerService {
         return beerRepo.deleteBeerByIdDb(number);
     }
 
+    @Override
     public Integer roundPrice(int price) {
         return ((price + 99) / 100) * 100;
     }
 
+    @Override
     public String convertToJson(Object o, int taskNumber, OutputFormat outputFormat, String nameOfTheTask, String name) {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         String result;
@@ -154,18 +159,22 @@ public class BeerServiceImplementation implements BeerService {
         }
     }
 
+    @Override
     public List<Beer> getBeers() {
         return beers;
     }
 
+    @Override
     public FileService getFileManager() {
         return fileManager;
     }
 
+    @Override
     public List<BrandsWithBeers> getBrandsWithBeers() {
         return brandsWithBeers;
     }
 
+    @Override
     public BeerRepo getBeerRepo() {
         return beerRepo;
     }

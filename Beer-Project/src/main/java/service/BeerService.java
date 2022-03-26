@@ -1,7 +1,9 @@
 package service;
 
+import beercatalog.Beer;
 import beercatalog.BrandsWithBeers;
 import controller.enums.OutputFormat;
+import repository.BeerRepo;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +20,10 @@ public interface BeerService {
     boolean deleteBeerById(String number);
     Integer roundPrice(int price);
     String convertToJson(Object o, int taskNumber, OutputFormat outputFormat, String nameOfTheTask, String name);
+    void addBeer(Beer beer);
+    void addBrandsWithBeers(BrandsWithBeers bwb);
+    List<Beer> getBeers();
+    FileService getFileManager();
+    List<BrandsWithBeers> getBrandsWithBeers();
+    BeerRepo getBeerRepo();
 }

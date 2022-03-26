@@ -37,18 +37,15 @@ public class Main {
         }
 
         Flyway fw = Flyway.configure().dataSource(dataSource).load();
-        fw.clean();
+//        fw.clean();
         fw.migrate();
 
 
         BeerRepo beerRepo = new BeerRepoImplementation(dataSource);
-        BeerService beerService = new BeerServiceImplementation(beerRepo, PATH);
+        BeerService beerService = new BeerServiceImplementation(beerRepo);
         FileService fileService = new FileServiceImplementation(beerService);
         Application application = new Application(beerService);
-        application.openConsole();
 
-//        Application application = new Application(dataSource);
-//        BeerService beerService = new BeerServiceImplementation(PATH);
-//        application.openConsole(beerService);
+        application.openConsole();
     }
 }

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import controller.Application;
 import controller.enums.OutputFormat;
 import repository.BeerRepo;
-import repository.BeerRepoImplementation;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,29 +21,20 @@ public class BeerServiceImplementation implements BeerService {
     private FileService fileManager;
     private List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
     private BeerRepo beerRepo;
-//    private BeerRepo beerRepo = new BeerRepoImplementation();
     private Application application = new Application();
 
     public BeerServiceImplementation() {
     }
 
-//    public BeerServiceImplementation(BeerRepo beerRepo) {
-//        this.beerRepo = beerRepo;
-//    }
-
-//    public BeerServiceImplementation(String path) {
-//        fileManager = new FileServiceImplementation();
-//        beers = fileManager.readJsonFile(path);
-//    }
-
-    public BeerServiceImplementation(BeerRepo beerRepo, String path) {
+    public BeerServiceImplementation(BeerRepo beerRepo) {
         this.beerRepo = beerRepo;
         fileManager = new FileServiceImplementation();
-        beers = fileManager.readJsonFile(path);
+//        beers = fileManager.readJsonFile(path);
     }
 
     @Override
-    public void saveDataToDb() {
+    public void saveDataToDb(String path) {
+        beers = fileManager.readJsonFile(path);
         beerRepo.saveBeers(beers);
     }
 

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FileServiceImplementation implements FileService {
+    private static final String PATH = "src/main/resources/demo.json";
     private BeerService beerService;
 
     public FileServiceImplementation() {

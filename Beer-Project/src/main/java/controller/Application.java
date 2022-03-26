@@ -40,30 +40,6 @@ public class Application {
         this.beerService = beerService;
     }
 
-//    public static void main(String[] args) {
-//        MariaDbDataSource dataSource = new MariaDbDataSource();
-//
-//        Properties prop = new Properties();
-//        try (BufferedReader br = new BufferedReader(
-//                new InputStreamReader(BeerRepoImplementation.class.getResourceAsStream(PATH_PROPERTIES)))) {
-//            prop.load(br);
-//            dataSource.setUrl(prop.getProperty("url"));
-//            dataSource.setUser(prop.getProperty("user"));
-//            dataSource.setPassword(prop.getProperty("password"));
-//        } catch (IOException | SQLException ex) {
-//            throw new IllegalStateException("Cannot reach file", ex);
-//        }
-//
-//        Flyway fw = Flyway.configure().dataSource(dataSource).load();
-//        fw.clean();
-//        fw.migrate();
-//
-//
-//        Application application = new Application(dataSource);
-//        BeerService beerService = new BeerServiceImplementation(PATH);
-//        application.openConsole(beerService);
-//    }
-
     public void openConsole() {
         System.out.println("***********************\n   Beer Manager App\n***********************\n\nAdd your name:");
         String name;
@@ -80,7 +56,7 @@ public class Application {
         while (!validator.validateFillingDataBaseInput(option = scanner.nextLine())) {
         }
         if (option.equalsIgnoreCase("yes")) {
-            beerService.saveDataToDb();
+            beerService.saveDataToDb(PATH);
         }
     }
 

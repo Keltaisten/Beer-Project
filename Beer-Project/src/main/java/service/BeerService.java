@@ -15,7 +15,7 @@ public interface BeerService {
     List<String> getIdsThatLackSpecificIngredient(String ingredient, OutputFormat outputFormat, String name);
     List<String> sortAllBeersByRemainingIngredientRatio(OutputFormat outputFormat, String name);
     Map<Integer, List<String>> listBeersBasedOnTheirPriceWithATip(OutputFormat outputFormat, String name);
-    void saveDataToDb();
+    void saveDataToDb(String path);
     void updatePrice();
     boolean deleteBeerById(String number);
     Integer roundPrice(int price);

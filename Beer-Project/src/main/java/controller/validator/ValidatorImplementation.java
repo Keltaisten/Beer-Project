@@ -76,11 +76,10 @@ public class ValidatorImplementation implements Validator {
 
     @Override
     public boolean validateFillingDataBaseInput(String nextLine) {
-        String line = nextLine.toLowerCase();
         if (nextLine == null || nextLine.trim().equals("")) {
             System.out.println("No given parameter");
             return false;
-        } else if ("yes".equals(line) || "no".equals(line)) {
+        } else if ("yes".equalsIgnoreCase(nextLine) || "no".equalsIgnoreCase(nextLine)) {
             return true;
         } else {
             System.out.println("Given parameter is not ok: " + nextLine);

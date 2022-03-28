@@ -20,7 +20,6 @@ import java.util.Properties;
 public class Main {
     private MariaDbDataSource dataSource;
     private static final String PATH_PROPERTIES = "/beerstore.properties";
-    private static final String PATH = "src/main/resources/demo.json";
 
     public static void main(String[] args) {
         MariaDbDataSource dataSource = new MariaDbDataSource();
@@ -42,11 +41,11 @@ public class Main {
 
 
         BeerRepo beerRepo = new BeerRepoImplementation(dataSource);
-        FileService fileService = new FileServiceImplementation(beerRepo);
-        BeerService beerService = new BeerServiceImplementation(beerRepo, fileService);
-//        FileService fileService = new FileServiceImplementation(beerService);
-        Application application = new Application(beerService);
+        FileService fileService = new FileServiceImplementation();
+        Application application = new Application();
+        BeerService beerService = new BeerServiceImplementation(beerRepo, fileService,application);
+        Application application2 = new Application(beerService);
 
-        application.openConsole();
+        application2.openConsole();
     }
 }

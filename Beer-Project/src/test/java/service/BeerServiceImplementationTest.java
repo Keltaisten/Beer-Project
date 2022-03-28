@@ -3,6 +3,7 @@ package service;
 import beercatalog.Beer;
 import beercatalog.BrandsWithBeers;
 import beercatalog.Ingredient;
+import controller.Application;
 import controller.enums.OutputFormat;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mariadb.jdbc.MariaDbDataSource;
 import repository.BeerRepoImplementation;
 
+import java.awt.desktop.AppForegroundListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,7 +41,8 @@ class BeerServiceImplementationTest {
             dataSource.setPassword(prop.getProperty("password"));
             beerRepository = new BeerRepoImplementation(dataSource);
             FileService fileService = new FileServiceImplementation();
-            beerServiceImpl = new BeerServiceImplementation(beerRepository, fileService);
+            Application application = new Application();
+            beerServiceImpl = new BeerServiceImplementation(beerRepository, fileService,application);
             beerServiceImpl.getBeers().clear();
 //            beerRepository.init();
             Flyway fw = Flyway.configure().dataSource(dataSource).load();

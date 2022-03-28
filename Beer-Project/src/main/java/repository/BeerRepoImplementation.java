@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class BeerRepoImplementation implements BeerRepo {
-    private static final String PATH_PROPERTIES = "/beerstore.properties";
     private MariaDbDataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 

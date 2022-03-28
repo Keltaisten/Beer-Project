@@ -22,16 +22,10 @@ import java.util.Scanner;
 public class Application {
 
     private static final String PATH = "src/main/resources/demo.json";
-    private static final String PATH_PROPERTIES = "/beerstore.properties";
     Validator validator = new ValidatorImplementation();
     Scanner scanner = new Scanner(System.in);
     private OutputFormat outputFormat;
-    private MariaDbDataSource dataSource;
     private BeerService beerService;
-
-    public Application(MariaDbDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public Application() {
     }

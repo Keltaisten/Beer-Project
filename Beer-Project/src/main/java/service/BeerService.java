@@ -23,7 +23,7 @@ public interface BeerService {
     void addBeer(Beer beer);
     void addBrandsWithBeers(BrandsWithBeers bwb);
     List<Beer> getBeers();
-    FileService getFileManager();
+    FileService getFileService();
     List<BrandsWithBeers> getBrandsWithBeers();
     BeerRepo getBeerRepo();
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class BeerServiceImplementation implements BeerService {
     private static final String PATH = "src/main/resources/demo.json";
     private List<Beer> beers = new ArrayList<>();
-    private FileService fileManager;
+    private FileService fileService;
     private List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
     private BeerRepo beerRepo;
     private Application application = new Application();
@@ -26,15 +26,16 @@ public class BeerServiceImplementation implements BeerService {
     public BeerServiceImplementation() {
     }
 
-    public BeerServiceImplementation(BeerRepo beerRepo) {
+    public BeerServiceImplementation(BeerRepo beerRepo, FileService fileService) {
         this.beerRepo = beerRepo;
-        fileManager = new FileServiceImplementation();
+        this.fileService = fileService;
+//        fileManager = new FileServiceImplementation();
 //        beers = fileManager.readJsonFile(path);
     }
 
     @Override
     public void saveDataToDb(String path) {
-        beers = fileManager.readJsonFile(path);
+        beers = fileService.readJsonFile(path);
         beerRepo.saveBeers(beers);
     }
 
@@ -167,8 +168,8 @@ public class BeerServiceImplementation implements BeerService {
     }
 
     @Override
-    public FileService getFileManager() {
-        return fileManager;
+    public FileService getFileService() {
+        return fileService;
     }
 
     @Override

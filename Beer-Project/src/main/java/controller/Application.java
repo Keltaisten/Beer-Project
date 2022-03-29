@@ -22,16 +22,17 @@ import java.util.Scanner;
 public class Application {
 
     private static final String PATH = "src/main/resources/demo.json";
-    Validator validator = new ValidatorImplementation();
-    Scanner scanner = new Scanner(System.in);
+    private Validator validator;
     private OutputFormat outputFormat;
     private BeerService beerService;
+    Scanner scanner = new Scanner(System.in);
 
     public Application() {
     }
 
-    public Application(BeerService beerService) {
+    public Application(BeerService beerService, Validator validator) {
         this.beerService = beerService;
+        this.validator = validator;
     }
 
     public void openConsole() {
@@ -39,12 +40,12 @@ public class Application {
         String name;
         while (!validator.validateName(name = scanner.nextLine())) {
         }
-        fillDatabaseOrNot(beerService);
+        fillDatabaseOrNot();
         outputFormat = selectOutputFormat();
-        selectService(beerService, name);
+        selectService(name);
     }
 
-    private void fillDatabaseOrNot(BeerService beerService) {
+    private void fillDatabaseOrNot() {
         System.out.println("Do you want to save data to DB?\n (Yes or No)");
         String option;
         while (!validator.validateFillingDataBaseInput(option = scanner.nextLine())) {
@@ -71,7 +72,7 @@ public class Application {
         throw new IllegalStateException("Not ok input");
     }
 
-    private void selectService(BeerService beerService, String name) {
+    private void selectService(String name) {
         int step;
         String line;
         do {

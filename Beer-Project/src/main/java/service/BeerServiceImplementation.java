@@ -66,9 +66,10 @@ public class BeerServiceImplementation implements BeerService {
     @Override
     public String getTheCheapestBrand(OutputFormat outputFormat, String name) {
         String cheapestBrand = beerRepo.getBeersAndPricesForTheCheapestBrandDb()
-                .orElseThrow(() -> new IllegalArgumentException("No data in the list"))
                 .stream()
-                .collect(Collectors.toMap(BeerAndPrice::getBeer, BeerAndPrice::getPrice, Integer::sum))
+//                .collect(Collectors.toMap(BeerAndPrice::getBeer, BeerAndPrice::getPrice, Integer::sum))
+                .collect(Collectors.groupingBy(BeerAndPrice::getBeer, Collectors.mapping(BeerAndPrice::getPrice, Collectors.averagingInt(i -> i))))
+//                .collect(Collectors.toMap(BeerAndPrice::getBeer, BeerAndPrice::getPrice, Integer::sum))
                 .entrySet().stream()
                 .sorted(Comparator.comparing(k -> k.getValue()))
                 .map(k -> k.getKey()).findFirst()
@@ -80,8 +81,7 @@ public class BeerServiceImplementation implements BeerService {
 
     @Override
     public List<String> getIdsThatLackSpecificIngredient(String ingredient, OutputFormat outputFormat, String name) {
-        List<String> idsWithoutSpecificIngredient = beerRepo.getIdsThatLackSpecificIngredientDb(ingredient)
-                .orElseThrow(() -> new IllegalArgumentException("No data in the list"));
+        List<String> idsWithoutSpecificIngredient = beerRepo.getIdsThatLackSpecificIngredientDb(ingredient);
         String nameOfTheTask = "get_ids_that_lack_from_specific_ingredient";
         convertToJson(idsWithoutSpecificIngredient, 4, outputFormat, nameOfTheTask, name);
         return idsWithoutSpecificIngredient;

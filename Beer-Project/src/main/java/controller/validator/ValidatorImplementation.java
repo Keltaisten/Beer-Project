@@ -86,4 +86,8 @@ public class ValidatorImplementation implements Validator {
             return false;
         }
     }
+
+    public void createEnum(){
+
+    }
 }

@@ -1,6 +1,8 @@
 package configuration;
 
 import controller.Application;
+import controller.validator.Validator;
+import controller.validator.ValidatorImplementation;
 import org.flywaydb.core.Flyway;
 import org.mariadb.jdbc.MariaDbDataSource;
 import repository.BeerRepo;
@@ -18,7 +20,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class Main {
-    private MariaDbDataSource dataSource;
     private static final String PATH_PROPERTIES = "/beerstore.properties";
 
     public static void main(String[] args) {
@@ -39,12 +40,12 @@ public class Main {
         fw.clean();
         fw.migrate();
 
-
         BeerRepo beerRepo = new BeerRepoImplementation(dataSource);
         FileService fileService = new FileServiceImplementation();
+        Validator validator = new ValidatorImplementation();
         Application application = new Application();
         BeerService beerService = new BeerServiceImplementation(beerRepo, fileService,application);
-        Application application2 = new Application(beerService);
+        Application application2 = new Application(beerService, validator);
 
         application2.openConsole();
     }

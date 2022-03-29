@@ -47,15 +47,15 @@ public class BeerRepoImplementation implements BeerRepo {
     }
 
     @Override
-    public Optional<List<String>> getIdsThatLackSpecificIngredientDb(String ingredient) {
-        return Optional.of(jdbcTemplate.query("select * from ingredients where ingredient_name = ? AND ratio = 0;",
-                (rs, rowNum) -> rs.getString("beer_id"), ingredient));
+    public List<String> getIdsThatLackSpecificIngredientDb(String ingredient) {
+        return jdbcTemplate.query("select * from ingredients where ingredient_name = ? AND ratio = 0;",
+                (rs, rowNum) -> rs.getString("beer_id"), ingredient);
     }
 
     @Override
-    public Optional<List<BeerAndPrice>> getBeersAndPricesForTheCheapestBrandDb() {
-        return Optional.of(jdbcTemplate.query("select * from beers;",
-                (rs, rowNum) -> new BeerAndPrice(rs.getString("brand"), rs.getInt("price"))));
+    public List<BeerAndPrice> getBeersAndPricesForTheCheapestBrandDb() {
+        return jdbcTemplate.query("select * from beers;",
+                (rs, rowNum) -> new BeerAndPrice(rs.getString("brand"), rs.getInt("price")));
     }
 
     @Override
@@ -68,7 +68,8 @@ public class BeerRepoImplementation implements BeerRepo {
     public List<BrandsWithBeers> groupBeersByBrandDb() {
         List<BrandsWithBeers> brandsWithBeers = new ArrayList<>();
         for (Brand brand : Brand.values()) {
-            brandsWithBeers.add(new BrandsWithBeers(brand.getName(), jdbcTemplate.query("select * from beers WHERE brand = ?;",
+            brandsWithBeers.add(new BrandsWithBeers(brand.getName(),
+                    jdbcTemplate.query("select * from beers WHERE brand = ?;",
                     (rs, rowNum) -> rs.getString("beer_id"), brand.getName())));
         }
         return brandsWithBeers;

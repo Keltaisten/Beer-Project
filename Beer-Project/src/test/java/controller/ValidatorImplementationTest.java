@@ -27,7 +27,7 @@ class ValidatorImplementationTest {
     @Test
     void validateTypeTest() {
         assertTrue(validator.validateType("brown"));
-        assertFalse(validator.validateType("notIncluded"));
+        assertFalse(validator.validateType("stout"));
     }
 
     @Test

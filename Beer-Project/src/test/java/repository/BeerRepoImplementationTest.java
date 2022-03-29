@@ -109,13 +109,13 @@ class BeerRepoImplementationTest {
 
     @Test
     void getIdsThatLackSpecificIngredientDb() {
-        assertEquals("spa-1",beerRepository.getIdsThatLackSpecificIngredientDb("barley").get().get(0));
+        assertEquals("spa-1",beerRepository.getIdsThatLackSpecificIngredientDb("barley").get(0));
     }
 
     @Test
     void getTheCheapestBrandDb() {
-        assertEquals("Coding Challenge Brewery",beerRepository.getBeersAndPricesForTheCheapestBrandDb().get().get(0).getBeer());
-        assertEquals(4645,beerRepository.getBeersAndPricesForTheCheapestBrandDb().get().get(0).getPrice());
+        assertEquals("Coding Challenge Brewery",beerRepository.getBeersAndPricesForTheCheapestBrandDb().get(0).getBeer());
+        assertEquals(4645,beerRepository.getBeersAndPricesForTheCheapestBrandDb().get(0).getPrice());
     }
 
     @Test
@@ -156,7 +156,7 @@ class BeerRepoImplementationTest {
     @Test
     void deleteBeerByIdDbTest(){
         assertTrue(beerRepository.deleteBeerByIdDb("sw-1"));
-        assertFalse(beerRepository.deleteBeerByIdDb("NotAnId"));
+        assertFalse(beerRepository.deleteBeerByIdDb("hp-1"));
     }
 
 }

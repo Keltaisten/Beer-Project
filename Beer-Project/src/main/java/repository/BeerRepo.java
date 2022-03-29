@@ -9,8 +9,8 @@ public interface BeerRepo {
     void saveBeers(List<Beer> beers);
     void saveIngredients(Beer beer);
     Optional<List<String>> filterBeersByBeerTypeDb(String type);
-    Optional<List<String>> getIdsThatLackSpecificIngredientDb(String ingredient);
-    Optional<List<BeerAndPrice>> getBeersAndPricesForTheCheapestBrandDb();
+    List<String> getIdsThatLackSpecificIngredientDb(String ingredient);
+    List<BeerAndPrice> getBeersAndPricesForTheCheapestBrandDb();
     Optional<List<BeerIdWithIngredientRatio>> getBeerIdsWithIngrRatioForsortAllBeersByRemainingIngredientRatioDb();
     List<BrandsWithBeers> groupBeersByBrandDb();
     Optional<List<BeerAndPrice>> listBeersWithPriceForTipCalculationDb();

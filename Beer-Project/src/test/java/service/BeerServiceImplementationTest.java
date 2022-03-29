@@ -21,12 +21,8 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BeerServiceImplementationTest {
-    private static final String PATH = "src/main/resources/demo.json";
     BeerServiceImplementation beerServiceImpl;
-//    BeerServiceImplementation beerServiceImpl = new BeerServiceImplementation();
     BeerRepoImplementation beerRepository;
-//    BeerRepoImplementation beerRepository = new BeerRepoImplementation();
-    List<Beer> beers = new ArrayList<>();
 
     @BeforeEach
     void initTest() {
@@ -35,7 +31,6 @@ class BeerServiceImplementationTest {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(BeerRepoImplementation.class.getResourceAsStream("/beerstore.properties")))) {
             prop.load(br);
-//            MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));
             dataSource.setUser(prop.getProperty("user"));
             dataSource.setPassword(prop.getProperty("password"));
@@ -44,7 +39,6 @@ class BeerServiceImplementationTest {
             Application application = new Application();
             beerServiceImpl = new BeerServiceImplementation(beerRepository, fileService,application);
             beerServiceImpl.getBeers().clear();
-//            beerRepository.init();
             Flyway fw = Flyway.configure().dataSource(dataSource).load();
             fw.clean();
             fw.migrate();
@@ -94,15 +88,10 @@ class BeerServiceImplementationTest {
         beerServiceImpl.addBrandsWithBeers(brandsWithBeers1);
         beerServiceImpl.addBrandsWithBeers(brandsWithBeers2);
         beerServiceImpl.addBrandsWithBeers(brandsWithBeers3);
-//        beerServiceImpl.getBeerRepo().saveBeers(beerServiceImpl.getBeers());
-
-//        BeerRepoImplementation beerRepo = new BeerRepoImplementation();
-//        beerRepo.saveBeers(beerManager.getBeers());
     }
 
     @Test
     void groupBeersByBrand() {
-//        beerRepository.saveBeers();
         beerServiceImpl.getBeerRepo().saveBeers(beerServiceImpl.getBeers());
         assertEquals(2, beerServiceImpl.groupBeersByBrand(OutputFormat.CONSOLE, "John").get(4).getBeers().size());
         assertEquals("Share", beerServiceImpl.groupBeersByBrand(OutputFormat.CONSOLE, "John").get(4).getBrand());

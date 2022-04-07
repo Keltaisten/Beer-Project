@@ -15,6 +15,7 @@ import java.awt.desktop.AppForegroundListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -152,5 +153,15 @@ class BeerServiceImplementationTest {
     void roundPriceTest() {
         assertEquals(1600, beerServiceImpl.roundPrice(1522));
         assertEquals(1700, beerServiceImpl.roundPrice(1700));
+    }
+
+    @Test
+    void init(){
+        beerServiceImpl.saveDataToDb("src/main/resources/demo3.json");
+    }
+
+    @Test
+    void TransactionalErrorTest(){
+        beerServiceImpl.saveDataToDb("src/main/resources/demo4.json");
     }
 }

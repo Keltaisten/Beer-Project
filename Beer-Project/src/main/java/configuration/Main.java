@@ -37,7 +37,6 @@ public class Main {
         }
 
         Flyway fw = Flyway.configure().dataSource(dataSource).load();
-        fw.clean();
         fw.migrate();
 
         BeerRepo beerRepo = new BeerRepoImplementation(dataSource);

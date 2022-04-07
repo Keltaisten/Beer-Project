@@ -24,6 +24,7 @@ public class BeerRepoImplementation implements BeerRepo {
     }
 
     @Override
+    @Transactional
     public void saveBeers(List<Beer> beers) {
         for (Beer beer : beers) {
             jdbcTemplate.update("insert into beers (beer_id, beer_name, brand, beer_type, price, alcohol) values (?,?,?,?,?,?);",

@@ -67,9 +67,7 @@ public class BeerServiceImplementation implements BeerService {
     public String getTheCheapestBrand(OutputFormat outputFormat, String name) {
         String cheapestBrand = beerRepo.getBeersAndPricesForTheCheapestBrandDb()
                 .stream()
-//                .collect(Collectors.toMap(BeerAndPrice::getBeer, BeerAndPrice::getPrice, Integer::sum))
                 .collect(Collectors.groupingBy(BeerAndPrice::getBeer, Collectors.mapping(BeerAndPrice::getPrice, Collectors.averagingInt(i -> i))))
-//                .collect(Collectors.toMap(BeerAndPrice::getBeer, BeerAndPrice::getPrice, Integer::sum))
                 .entrySet().stream()
                 .sorted(Comparator.comparing(k -> k.getValue()))
                 .map(k -> k.getKey()).findFirst()

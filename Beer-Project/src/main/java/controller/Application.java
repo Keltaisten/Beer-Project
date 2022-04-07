@@ -25,7 +25,7 @@ public class Application {
     private Validator validator;
     private OutputFormat outputFormat;
     private BeerService beerService;
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
     public Application() {
     }

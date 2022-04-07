@@ -30,12 +30,10 @@ class BeerRepoImplementationTest {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(BeerRepoImplementation.class.getResourceAsStream("/beerstore.properties")))) {
             prop.load(br);
-//            MariaDbDataSource dataSource = new MariaDbDataSource();
             dataSource.setUrl(prop.getProperty("url"));
             dataSource.setUser(prop.getProperty("user"));
             dataSource.setPassword(prop.getProperty("password"));
             beerRepository = new BeerRepoImplementation(dataSource);
-//            beerRepository.init();
             Flyway fw = Flyway.configure().dataSource(dataSource).load();
             fw.clean();
             fw.migrate();
